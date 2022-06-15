@@ -7,8 +7,7 @@ const PlaylistRow = (props: any) => {
       key={props.playlist.title}
       onPress={() =>
         props.navigation.navigate("Playlist", {
-          itemId: 86,
-          otherParam: "anything you want here",
+          playlist: props.playlist,
         })
       }
       style={tw`flex flex-row m-1`}
@@ -18,8 +17,8 @@ const PlaylistRow = (props: any) => {
         source={require("../assets/images/playlist.png")}
       />
       <View style={tw`flex`}>
-        <Text style={tw`text-lg font-bold`}>{props.playlist.title}</Text>
-        <Text style={tw`text-gry font-bold`}>
+        <Text style={tw`text-lg font-bold dark:text-white`}>{props.playlist.title}</Text>
+        <Text style={tw`text-gry font-bold dark:text-grn`}>
           {props.playlist.owner.username}
         </Text>
       </View>

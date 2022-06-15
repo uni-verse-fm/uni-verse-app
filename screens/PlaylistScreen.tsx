@@ -1,41 +1,59 @@
-import { Text, View } from "../components/Themed";
+import { View, Text } from "react-native";
 import tw from "../tailwind";
-import { RootTabScreenProps } from "../types";
+import { RootStackScreenProps } from "../types";
 import { Image, FlatList } from "react-native";
-import { tracks } from "./SearchScreen";
 import React from "react";
 import TrackCell from "../components/TrackCell";
+import { isoDateToDate } from "../utils/dateUtils";
 
 interface IParams {
-  itemId: string;
-  otherParam: any;
+  playlist: any;
 }
 
-const description = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`
+const description = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`;
 export default function PlaylistScreen({
   route,
   navigation,
-}: RootTabScreenProps<"Home">) {
-  const { itemId, otherParam } = route.params as unknown as IParams;
+}: RootStackScreenProps<"Playlist">) {
+  const { playlist } = route.params as unknown as IParams;
   return (
-    <View style={tw`flex`}>
+    <View style={tw`flex-1 dark:bg-drk bg-white`}>
       <View style={tw`flex flex-row m-2`}>
         <Image
           style={tw`h-40 w-40 rounded-xl`}
           source={require("../assets/images/playlist.png")}
         />
         <View style={tw`flex m-6`}>
-            <Text style={tw`text-lg font-bold text-gry`}>{`Title: ${itemId}`}</Text>
-            <Text style={tw`text-lg font-bold text-gry`}>{`Owner: ${itemId}`}</Text>
-            <Text style={tw`text-lg font-bold text-gry`}>{`Created at: ${itemId}`}</Text>
+          <Text
+            style={tw`text-lg font-bold text-black dark:text-white`}
+          >{`Title:`}</Text>
+          <Text
+            style={tw`text-base font-bold text-white dark:text-grn`}
+          >{playlist.title}</Text>
+          <Text
+            style={tw`text-lg font-bold text-black dark:text-white`}
+          >{`Owner:`}</Text>
+          <Text
+            style={tw`text-base font-bold text-gry dark:text-grn`}
+          >{playlist.owner.username}</Text>
+          <Text
+            style={tw`text-lg font-bold text-black dark:text-white`}
+          >{`Created at:`}</Text>
+          <Text
+            style={tw`text-base font-bold text-gry dark:text-grn`}
+          >{isoDateToDate(playlist.createdAt)}</Text>
         </View>
       </View>
-      <View style={tw`mx-2`}>
-        <Text style={tw`text-lg font-bold text-black mt-4`}>{`Tracks:`}</Text>
+      <View style={tw`flex-1 mx-2`}>
+        <Text
+          style={tw`text-lg font-bold text-black dark:text-white mt-4`}
+        >{`Tracks:`}</Text>
         <FlatList
-            data={tracks}
-            renderItem={({ item }) => <TrackCell track={item} navigation={navigation} />}
-          />
+          data={playlist.tracks}
+          renderItem={({ item }) => (
+            <TrackCell track={item} navigation={navigation} />
+          )}
+        />
       </View>
     </View>
   );

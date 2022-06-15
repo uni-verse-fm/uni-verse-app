@@ -2,19 +2,17 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Slider } from "@miblanchard/react-native-slider";
 import React from "react";
 import { View, Image, Text } from "react-native";
-import Colors from "../constants/Colors";
 import tw from "../tailwind";
 
 export default function FloatingMenu() {
   return (
     <View style={tw`absolute w-full bottom-16 right-0`}>
       <View style={tw`flex justify-between p-2 items-end`}>
-        <View style={tw`w-11.5 h-11.5 mb-2 rounded-full bg-grn justify-self-end`}>
+        <View style={tw`w-11.5 h-11.5 mb-2 rounded-full bg-grn`}>
           <FontAwesome
             size={15}
             style={tw`ml-4 mt-4`}
             name="search"
-            color={Colors.light.constantText}
           />
         </View>
         <View style={tw`flex flex-row w-full h-11.5 rounded-full bg-grn`}>
@@ -43,19 +41,16 @@ export default function FloatingMenu() {
               size={15}
               style={tw`ml-3 mt-4`}
               name="chevron-left"
-              color={Colors.light.constantText}
             />
             <FontAwesome
               size={15}
               style={tw`mx-6 mt-4`}
               name="pause"
-              color={Colors.light.constantText}
             />
             <FontAwesome
               size={15}
               style={tw`mt-4 mr-2`}
               name="chevron-right"
-              color={Colors.light.constantText}
             />
           </View>
         </View>

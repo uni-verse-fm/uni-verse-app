@@ -1,26 +1,28 @@
-import { View, Text } from "react-native";
+import { View, Text, Alert } from "react-native";
 import tw from "../tailwind";
-import { RootTabScreenProps } from "../types";
+import { RootStackScreenProps } from "../types";
 import { Image, FlatList } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import ReleaseCell from "../components/ReleaseCell";
-import { getUserReleases } from "../api/ReleaseAPI";
+import { me } from "../api/AuthAPI";
 import { useQuery } from "react-query";
+import { getUserReleases } from "../api/ReleaseAPI";
 
-interface IParams {
-  user: any;
-}
-
-export default function UserScreen({
-  route,
+export default function MyProfileScreen({
   navigation,
-}: RootTabScreenProps<"Home">) {
-  const { user } = route.params as unknown as IParams;
+}: RootStackScreenProps<"MyProfile">) {
+  const meQuery = useQuery("me", () => me().then((res) => res.data), {
+    onSuccess: (res) => {
+      if (res.status === 401) {
+        Alert.alert(JSON.stringify(res));
+      }
+    },
+  });
 
   const releaseQuery = useQuery(
-    `user-releases-${user.id}`,
-    () => getUserReleases(user.id as string),
-    { enabled: Boolean(user.id) }
+    "myReleases",
+    () => getUserReleases(meQuery.data.id as string),
+    { enabled: meQuery.status === "success" }
   );
 
   return (
@@ -34,15 +36,15 @@ export default function UserScreen({
           <Text
             style={tw`text-lg font-bold text-black dark:text-white`}
           >{`Usename:`}</Text>
-          <Text style={tw`text-base font-bold text-gry dark:text-grn`}>
-            {user.username}
-          </Text>
+          <Text style={tw`text-base font-bold text-gry dark:text-grn`}>{`${
+            meQuery.status === "success" ? meQuery.data.username : ""
+          }`}</Text>
           <Text
             style={tw`text-lg font-bold text-black dark:text-white`}
           >{`Email:`}</Text>
-          <Text style={tw`text-base font-bold text-gry dark:text-grn`}>
-            {user.email}
-          </Text>
+          <Text style={tw`text-base font-bold text-gry dark:text-grn`}>{`${
+            meQuery.status === "success" ? meQuery.data.email : ""
+          }`}</Text>
         </View>
       </View>
       <View style={tw`mx-2`}>
@@ -53,7 +55,7 @@ export default function UserScreen({
           <FlatList
             data={releaseQuery.data}
             renderItem={({ item }) => (
-              <ReleaseCell release={item} navigation={navigation} />
+              <ReleaseCell release={{ ...item, author: { username: meQuery.data.username }}} navigation={navigation} />
             )}
             style={tw`grow`}
           />

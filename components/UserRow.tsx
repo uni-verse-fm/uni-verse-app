@@ -7,8 +7,7 @@ const UserRow = (props: any) => {
       key={props.user.username}
       onPress={() =>
         props.navigation.navigate("User", {
-          itemId: 86,
-          otherParam: "anything you want here",
+          user: props.user,
         })
       }
       style={tw`flex flex-row m-1`}
@@ -18,8 +17,8 @@ const UserRow = (props: any) => {
         source={require("../assets/images/profile.jpg")}
       />
       <View style={tw`flex`}>
-        <Text style={tw`text-lg font-bold`}>{props.user.username}</Text>
-        <Text style={tw`text-gry font-bold`}>{props.user.email}</Text>
+        <Text style={tw`text-lg font-bold dark:text-white`}>{props.user.username}</Text>
+        <Text style={tw`text-gry font-bold dark:text-grn`}>{props.user.email}</Text>
       </View>
     </TouchableOpacity>
   );

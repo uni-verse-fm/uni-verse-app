@@ -9,13 +9,12 @@ import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
+  NavigationState,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { ColorSchemeName, Pressable, Image } from "react-native";
 
-import Colors from "../constants/Colors";
-import useColorScheme from "../hooks/useColorScheme";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import HomeScreen from "../screens/HomeScreen";
@@ -30,18 +29,32 @@ import SearchScreen from "../screens/SearchScreen";
 import ReleaseScreen from "../screens/ReleaseScreen";
 import PlaylistScreen from "../screens/PlaylistScreen";
 import UserScreen from "../screens/UserScreen";
+import tw from "../tailwind";
+import MyProfileScreen from "../screens/MyProfileScreen";
+import { AuthContext } from "../context/AuthContext";
+import LoginScreen from "../screens/LoginScreen";
+import RegisterScreen from "../screens/RegisterScreen";
 
 export default function Navigation({
   colorScheme,
+  onStateChange,
 }: {
   colorScheme: ColorSchemeName;
+  onStateChange: (state: NavigationState | undefined) => void;
 }) {
+  const authContext = React.useContext(AuthContext);
+
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+      onStateChange={onStateChange}
     >
-      <RootNavigator />
+      {authContext?.authState?.authenticated ? (
+        <AuthenticatedNavigator />
+      ) : (
+        <GuestNavigator />
+      )}
     </NavigationContainer>
   );
 }
@@ -52,42 +65,139 @@ export default function Navigation({
  */
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-function RootNavigator() {
+function GuestNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen
         name="Root"
-        component={BottomTabNavigator}
+        component={BottomGuestTabNavigator}
         options={{
-          title: "",
-          headerRight: () => (
-            <Pressable
-              style={({ pressed }) => ({
-                opacity: pressed ? 0.5 : 1,
-              })}
-            >
-              <Image
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 40 / 2,
-                }}
-                source={require("../assets/images/profile.jpg")}
-              />
-            </Pressable>
-          ),
+          headerShown: false,
         }}
       />
-      <Stack.Screen name="Release" component={ReleaseScreen} />
-      <Stack.Screen name="Playlist" component={PlaylistScreen} />
-      <Stack.Screen name="User" component={UserScreen} />
+      <Stack.Screen
+        name="Release"
+        component={ReleaseScreen}
+        options={{
+          headerStyle: tw`bg-white dark:bg-drk`,
+          headerTitleStyle: tw`text-black dark:text-white`,
+        }}
+      />
+      <Stack.Screen
+        name="Playlist"
+        component={PlaylistScreen}
+        options={{
+          headerStyle: tw`bg-white dark:bg-drk`,
+          headerTitleStyle: tw`text-black dark:text-white`,
+        }}
+      />
+      <Stack.Screen
+        name="User"
+        component={UserScreen}
+        options={{
+          headerStyle: tw`bg-white dark:bg-drk`,
+          headerTitleStyle: tw`text-black dark:text-white`,
+        }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={LoginScreen}
+        options={{
+          headerStyle: tw`bg-white dark:bg-drk`,
+          headerTitleStyle: tw`text-black dark:text-white`,
+        }}
+      />
+      <Stack.Screen
+        name="Register"
+        component={RegisterScreen}
+        options={{
+          headerStyle: tw`bg-white dark:bg-drk`,
+          headerTitleStyle: tw`text-black dark:text-white`,
+        }}
+      />
       <Stack.Screen
         name="NotFound"
         component={NotFoundScreen}
-        options={{ title: "Oops!" }}
+        options={{
+          title: "Oops!",
+          headerStyle: tw`bg-white dark:bg-drk`,
+          headerTitleStyle: tw`text-black dark:text-white`,
+        }}
       />
       <Stack.Group screenOptions={{ presentation: "modal" }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
+        <Stack.Screen
+          name="Modal"
+          component={ModalScreen}
+          options={{
+            headerStyle: tw`bg-white dark:bg-drk`,
+            headerTitleStyle: tw`text-black dark:text-white`,
+          }}
+        />
+      </Stack.Group>
+    </Stack.Navigator>
+  );
+}
+
+function AuthenticatedNavigator() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="Root"
+        component={BottomAuthenticatedTabNavigator}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="Release"
+        component={ReleaseScreen}
+        options={{
+          headerStyle: tw`bg-white dark:bg-drk`,
+          headerTitleStyle: tw`text-black dark:text-white`,
+        }}
+      />
+      <Stack.Screen
+        name="Playlist"
+        component={PlaylistScreen}
+        options={{
+          headerStyle: tw`bg-white dark:bg-drk`,
+          headerTitleStyle: tw`text-black dark:text-white`,
+        }}
+      />
+      <Stack.Screen
+        name="User"
+        component={UserScreen}
+        options={{
+          headerStyle: tw`bg-white dark:bg-drk`,
+          headerTitleStyle: tw`text-black dark:text-white`,
+        }}
+      />
+      <Stack.Screen
+        name="MyProfile"
+        component={MyProfileScreen}
+        options={{
+          headerStyle: tw`bg-white dark:bg-drk`,
+          headerTitleStyle: tw`text-black dark:text-white`,
+        }}
+      />
+      <Stack.Screen
+        name="NotFound"
+        component={NotFoundScreen}
+        options={{
+          title: "Oops!",
+          headerStyle: tw`bg-white dark:bg-drk`,
+          headerTitleStyle: tw`text-black dark:text-white`,
+        }}
+      />
+      <Stack.Group screenOptions={{ presentation: "modal" }}>
+        <Stack.Screen
+          name="Modal"
+          component={ModalScreen}
+          options={{
+            headerStyle: tw`bg-white dark:bg-drk`,
+            headerTitleStyle: tw`text-black dark:text-white`,
+          }}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -99,47 +209,132 @@ function RootNavigator() {
  */
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
-function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
-
+function BottomAuthenticatedTabNavigator() {
   return (
     <BottomTab.Navigator
       initialRouteName="Home"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
-        tabBarInactiveTintColor: Colors[colorScheme].inactiveTint,
+        tabBarActiveTintColor: "#1BC47D",
+        tabBarStyle: tw`bg-white dark:bg-drk`,
       }}
     >
       <BottomTab.Screen
         name="Home"
         component={HomeScreen}
-        options={{
+        options={({ navigation }: RootTabScreenProps<"Home">) => ({
           title: "Home",
-          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
-        }}
+          headerStyle: tw`bg-white dark:bg-drk`,
+          headerTitleStyle: tw`text-black dark:text-white`,
+          headerRight: () => (
+            <Pressable
+              onPress={() => navigation.navigate("Modal")}
+              style={({ pressed }) =>
+                tw`${pressed ? "bg-opacity-50" : ""} mr-2`
+              }
+            >
+              <Image
+                style={tw`w-10 h-10 rounded-full dark:border-2 dark:border-grn`}
+                source={require("../assets/images/profile.jpg")}
+              />
+            </Pressable>
+          ),
+        })}
       />
       <BottomTab.Screen
         name="Search"
         component={SearchScreen}
         options={{
           title: "Search",
-          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
+          headerStyle: tw`bg-white dark:bg-drk`,
+          headerTitleStyle: tw`text-black dark:text-white`,
         }}
       />
       <BottomTab.Screen
         name="Library"
         component={LibraryScreen}
-        options={{
-          title: "Library",
-          headerShown: false,
+        options={({ navigation }: RootTabScreenProps<"Library">) => ({
           tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
+          headerStyle: tw`bg-white dark:bg-drk`,
+          headerTitleStyle: tw`text-black dark:text-white`,
+          headerRight: () => (
+            <Pressable
+              onPress={() => navigation.navigate("Modal")}
+              style={({ pressed }) =>
+                tw`${pressed ? "bg-opacity-50" : ""} mr-2`
+              }
+            >
+              <Image
+                style={tw`w-10 h-10 rounded-full dark:border-2 dark:border-grn`}
+                source={require("../assets/images/profile.jpg")}
+              />
+            </Pressable>
+          ),
+        })}
+      />
+    </BottomTab.Navigator>
+  );
+}
+
+function BottomGuestTabNavigator() {
+  return (
+    <BottomTab.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        tabBarActiveTintColor: "#1BC47D",
+        tabBarStyle: tw`bg-white dark:bg-drk`,
+      }}
+    >
+      <BottomTab.Screen
+        name="Home"
+        component={HomeScreen}
+        options={({ navigation }: RootTabScreenProps<"Home">) => ({
+          title: "Home",
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          headerStyle: tw`bg-white dark:bg-drk`,
+          headerTitleStyle: tw`text-black dark:text-white`,
+          headerRight: () => (
+            <Pressable
+              onPress={() => navigation.navigate("Modal")}
+              style={({ pressed }) =>
+                tw`${pressed ? "bg-opacity-50" : ""} mr-2`
+              }
+            >
+              <Image
+                style={tw`w-10 h-10 rounded-full dark:border-2 dark:border-grn`}
+                source={require("../assets/images/profile.jpg")}
+              />
+            </Pressable>
+          ),
+        })}
+      />
+      <BottomTab.Screen
+        name="Search"
+        component={SearchScreen}
+        options={{
+          title: "Search",
+          tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
+          headerStyle: tw`bg-white dark:bg-drk`,
+          headerTitleStyle: tw`text-black dark:text-white`,
         }}
       />
     </BottomTab.Navigator>
   );
 }
+
+export const getCurrentRoute = (
+    state: NavigationState | Required<NavigationState['routes'][0]>['state'],
+  ): string | undefined => {
+    if (state.index === undefined || state.index < 0) {
+      return undefined;
+    }
+    const nestedState = state.routes[state.index].state;
+    if (nestedState !== undefined) {
+      return getCurrentRoute(nestedState);
+    }
+    return state.routes[state.index].name;
+  };
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/

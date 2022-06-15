@@ -1,15 +1,24 @@
 import { FontAwesome } from "@expo/vector-icons";
-import React, { useState } from "react";
-import { FlatList, TextInput, TouchableHighlight } from "react-native";
+import React, { useContext, useState } from "react";
+import {
+  FlatList,
+  TextInput,
+  TouchableHighlight,
+} from "react-native";
 
-import EditScreenInfo from "../components/EditScreenInfo";
 import PlaylistRow from "../components/PlaylistRow";
 import ReleaseRow from "../components/ReleaseRow";
-import { Text, View } from "../components/Themed";
+import { View, Text } from "react-native";
 import TrackRow from "../components/TrackRow";
 import UserRow from "../components/UserRow";
 import tw from "../tailwind";
 import { RootTabScreenProps } from "../types";
+import { useQuery } from "react-query";
+import { searchTrack } from "../api/TrackAPI";
+import { searchRelease } from "../api/ReleaseAPI";
+import { searchPlaylist } from "../api/PlaylistAPI";
+import { searchUsers } from "../api/UserAPI";
+import { AuthContext } from "../context/AuthContext";
 
 enum Tab {
   Releases,
@@ -18,182 +27,11 @@ enum Tab {
   Users,
 }
 
-export const playlists = [
-  {
-    title: "smooth",
-    owner: {
-      username: "Jimmy",
-    },
-    image: "",
-  },
-  {
-    title: "motivation",
-    owner: {
-      username: "Julie",
-    },
-    image: "",
-  },
-  {
-    title: "workout",
-    owner: {
-      username: "Joel",
-    },
-    image: "",
-  },
-  {
-    title: "trap",
-    owner: {
-      username: "James",
-    },
-    image: "",
-  },
-  {
-    title: "rock",
-    owner: {
-      username: "Devin",
-    },
-    image: "",
-  },
-];
-
-export const releases = [
-  {
-    title: "bro",
-    author: {
-      username: "Devin",
-    },
-    image: "",
-  },
-  {
-    title: "god is good",
-    author: {
-      username: "James",
-    },
-    image: "",
-  },
-  {
-    title: "just as hell",
-    author: {
-      username: "Joel",
-    },
-    image: "",
-  },
-  {
-    title: "dark",
-    author: {
-      username: "Jimmy",
-    },
-    image: "",
-  },
-  {
-    title: "nahnah",
-    author: {
-      username: "Julie",
-    },
-    image: "",
-  },
-];
-
-export const tracks = [
-  {
-    title: "slowly",
-    author: {
-      username: "Devin",
-    },
-    release: {
-      title: "bro",
-      image: "",
-    },
-  },
-  {
-    title: "123",
-    author: {
-      username: "Dan",
-    },
-    release: {
-      title: "dark",
-      image: "",
-    },
-  },
-  {
-    title: "nice",
-    author: {
-      username: "Dominic",
-    },
-    release: {
-      title: "dark",
-      image: "",
-    },
-  },
-  {
-    title: "clearly",
-    author: {
-      username: "Jackson",
-    },
-    release: {
-      title: "nahnah",
-      image: "",
-    },
-  },
-  {
-    title: "blur",
-    author: {
-      username: "James",
-    },
-    release: {
-      title: "bro",
-      image: "",
-    },
-  },
-  {
-    title: "mindly",
-    author: {
-      username: "Joel",
-    },
-    release: {
-      title: "nahnah",
-      image: "",
-    },
-  },
-];
-
-export const users = [
-  {
-    username: "Jimmy",
-    email: "jimmy@gmail.com",
-    image: "",
-  },
-  {
-    username: "Dominic",
-    email: "Dominic@gmail.com",
-    image: "",
-  },
-  {
-    username: "Jackson",
-    email: "Jackson@gmail.com",
-    image: "",
-  },
-  {
-    username: "James",
-    email: "James@gmail.com",
-    image: "",
-  },
-  {
-    username: "Joel",
-    email: "Joel@gmail.com",
-    image: "",
-  },
-  {
-    username: "John",
-    email: "John@gmail.com",
-    image: "",
-  },
-];
-
 export default function SearchScreen({
   navigation,
 }: RootTabScreenProps<"Home">) {
-  const [text, setText] = useState("");
+  const [query, setQuery] = useState("");
+  const { authState } = useContext(AuthContext);
 
   const [tab, setTab] = useState(Tab.Playlists);
 
@@ -201,10 +39,42 @@ export default function SearchScreen({
     setTab(tab);
   };
 
+  const taskQuery = useQuery(
+    ["searchTrack", query],
+    ({ signal }) => searchTrack(query, { signal }),
+    {
+      enabled: Boolean(query),
+    }
+  );
+
+  const releaseQuery = useQuery(
+    ["searchReleases", query],
+    ({ signal }) => searchRelease(query, { signal }),
+    {
+      enabled: Boolean(query),
+    }
+  );
+
+  const playlistQuery = useQuery(
+    ["searchPlaylists", query],
+    ({ signal }) => searchPlaylist(query, { signal }),
+    {
+      enabled: Boolean(query),
+    }
+  );
+
+  const userQuery = useQuery(
+    ["searchUsers", query],
+    ({ signal }) => searchUsers(query, { signal }),
+    {
+      enabled: Boolean(query),
+    }
+  );
+
   return (
-    <View style={tw``}>
+    <View style={tw`flex-1 dark:bg-drk bg-white`}>
       <View
-        style={tw`flex flex-row w-full h-10 p-2 rounded-full border-2 border-gry mx-1`}
+        style={tw`flex flex-row h-10 p-2 rounded-full border-2 border-gry mx-1 mt-1`}
       >
         <FontAwesome
           name="search"
@@ -212,10 +82,10 @@ export default function SearchScreen({
           size={14}
         />
         <TextInput
-          style={tw``}
+          style={tw`grow dark:text-white`}
           placeholder="Search..."
-          onChangeText={(newText) => setText(newText)}
-          defaultValue={text}
+          onChangeText={(newText) => setQuery(newText)}
+          defaultValue={query}
         />
       </View>
 
@@ -229,7 +99,7 @@ export default function SearchScreen({
           <Text
             style={tw`${
               tab === Tab.Playlists ? "text-white" : "text-black"
-            } text-lg font-bold`}
+            } text-lg font-bold dark:text-white dark:text-base`}
           >
             Playlists
           </Text>
@@ -244,7 +114,7 @@ export default function SearchScreen({
           <Text
             style={tw`${
               tab === Tab.Tracks ? "text-white" : "text-black"
-            } text-lg font-bold`}
+            } text-lg font-bold dark:text-white dark:text-base`}
           >
             Tracks
           </Text>
@@ -259,49 +129,64 @@ export default function SearchScreen({
           <Text
             style={tw`${
               tab === Tab.Releases ? "text-white" : "text-black"
-            } text-lg font-bold`}
+            } text-lg font-bold dark:text-white dark:text-base`}
           >
             Releases
           </Text>
         </TouchableHighlight>
 
-        <TouchableHighlight
-          onPress={() => onClickTab(Tab.Users)}
-          style={tw`${
-            tab === Tab.Users ? "bg-grn" : "bg-gry bg-opacity-15"
-          } w-1/4 h-7 text-center flex items-center rounded-full ml-1`}
-        >
-          <Text
+        {authState?.authenticated && (
+          <TouchableHighlight
+            onPress={() => onClickTab(Tab.Users)}
             style={tw`${
-              tab === Tab.Users ? "text-white" : "text-black"
-            } text-lg font-bold`}
+              tab === Tab.Users ? "bg-grn" : "bg-gry bg-opacity-15"
+            } w-1/4 h-7 text-center flex items-center rounded-full ml-1`}
           >
-            Users
-          </Text>
-        </TouchableHighlight>
+            <Text
+              style={tw`${
+                tab === Tab.Users ? "text-white" : "text-black"
+              } text-lg font-bold dark:text-white dark:text-base`}
+            >
+              Users
+            </Text>
+          </TouchableHighlight>
+        )}
       </View>
-      <View style={tw`flex`}>
-        {tab === Tab.Playlists ? (
+      <View style={tw`flex-1`}>
+        {tab === Tab.Playlists && playlistQuery.status === "success" ? (
           <FlatList
-            data={playlists}
-            renderItem={({ item }) => <PlaylistRow playlist={item} navigation={navigation}/>}
+            data={playlistQuery.data}
+            renderItem={({ item }) => (
+              <PlaylistRow playlist={item} navigation={navigation} />
+            )}
           />
-        ) : tab === Tab.Tracks ? (
+        ) : tab === Tab.Tracks && taskQuery.status === "success" ? (
           <FlatList
-            data={tracks}
-            renderItem={({ item }) => <TrackRow track={item} navigation={navigation}/>}
-
+            data={taskQuery.data}
+            renderItem={({ item }) => (
+              <TrackRow track={item} navigation={navigation} />
+            )}
           />
-        ) : tab === Tab.Releases ? (
+        ) : tab === Tab.Releases && releaseQuery.status === "success" ? (
           <FlatList
-            data={releases}
-            renderItem={({ item }) => <ReleaseRow release={item} navigation={navigation}/>}
+            data={releaseQuery.data}
+            renderItem={({ item }) => (
+              <ReleaseRow release={item} navigation={navigation} />
+            )}
+          />
+        ) : tab === Tab.Users &&
+          userQuery.status === "success" &&
+          authState?.authenticated ? (
+          <FlatList
+            data={userQuery.data}
+            renderItem={({ item }) => (
+              <UserRow user={item} navigation={navigation} />
+            )}
           />
         ) : (
-          <FlatList
-            data={users}
-            renderItem={({ item }) => <UserRow user={item} navigation={navigation}/>}
-          />
+          <View style={tw`flex-1 justify-center items-center`}>
+            <Text style={tw`text-gry dark:text-grn text-lg`}>No results</Text>
+          </View>
         )}
       </View>
     </View>

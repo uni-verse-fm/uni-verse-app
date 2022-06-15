@@ -2,6 +2,7 @@ const defaultTheme = require("tailwindcss/defaultTheme");
 const defaultColors = require("tailwindcss/colors");
 
 module.exports = {
+  darkMode: "media",
   content: [
     "./screens/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
@@ -19,7 +20,8 @@ module.exports = {
       serd: "#6B142E",
       wht: "#F3E8EE",
       gryf: "#1A0404",
-      ...defaultColors,
+      black: '#000',
+      white: '#fff',
     },
   },
 };

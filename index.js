@@ -1,8 +1,17 @@
-import { registerRootComponent } from 'expo';
+import { registerRootComponent } from "expo";
+import { AxiosProvider } from "./context/AxiosContext";
+import { AuthProvider } from './context/AuthContext';
 
-import App from './App';
 
-// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
-// It also ensures that whether you load the app in Expo Go or in a native build,
-// the environment is set up appropriately
-registerRootComponent(App);
+import App from "./App";
+
+const Root = () => {
+  return (
+    <AuthProvider>
+      <AxiosProvider>
+        <App />
+      </AxiosProvider>
+    </AuthProvider>
+  );
+};
+registerRootComponent(Root);

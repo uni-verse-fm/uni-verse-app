@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { FlatList, TouchableHighlight } from "react-native";
 import PlaylistRow from "../components/PlaylistRow";
 import ReleaseRow from "../components/ReleaseRow";
-import { Text, View } from "../components/Themed";
+import { View, Text } from "react-native";
+
 import tw from "../tailwind";
 import { RootTabScreenProps } from "../types";
 
@@ -52,7 +53,9 @@ export const releases = [
   },
 ];
 
-export default function LibraryScreen({ navigation }: RootTabScreenProps<'Home'>) {
+export default function LibraryScreen({
+  navigation,
+}: RootTabScreenProps<"Library">) {
   const [tab, setTab] = useState(Tab.Playlists);
 
   const onClickTab = (tab: Tab) => {
@@ -60,49 +63,52 @@ export default function LibraryScreen({ navigation }: RootTabScreenProps<'Home'>
   };
 
   return (
-    <View>
+    <View style={tw`flex-1 dark:bg-drk bg-white`}>
       <View style={tw`flex flex-row items-center h-10 p-1`}>
         <TouchableHighlight
           onPress={() => onClickTab(Tab.Playlists)}
           style={tw`${
             tab === Tab.Playlists ? "bg-grn" : "bg-gry bg-opacity-15"
-          } w-1/2 h-7 text-center flex items-center rounded-full mr-1`}
+          } grow h-7 text-center flex items-center rounded-full mr-1`}
         >
           <Text
             style={tw`${
               tab === Tab.Playlists ? "text-white" : "text-black"
-            } text-lg font-bold`}
+            } text-lg font-bold dark:text-white dark:text-base`}
           >
             Playlists
           </Text>
         </TouchableHighlight>
 
-        {/* <View style={tw`border-2 border-grn rounded-full h-5`} /> */}
         <TouchableHighlight
           onPress={() => onClickTab(Tab.Releases)}
           style={tw`${
             tab === Tab.Releases ? "bg-grn" : "bg-gry bg-opacity-15"
-          } w-1/2 h-7 text-center flex items-center rounded-full ml-1`}
+          } grow h-7 text-center flex items-center rounded-full ml-1`}
         >
           <Text
             style={tw`${
               tab === Tab.Releases ? "text-white" : "text-black"
-            } text-lg font-bold`}
+            } text-lg font-bold dark:text-white dark:text-base`}
           >
             Releases
           </Text>
         </TouchableHighlight>
       </View>
-      <View style={tw`flex`}>
+      <View style={tw`flex-1`}>
         {tab === Tab.Releases ? (
           <FlatList
             data={releases}
-            renderItem={({ item }) => <ReleaseRow release={item} navigation={navigation}/>}
+            renderItem={({ item }) => (
+              <ReleaseRow release={item} navigation={navigation} />
+            )}
           />
         ) : (
           <FlatList
             data={playlists}
-            renderItem={({ item }) => <PlaylistRow playlist={item} navigation={navigation} />}
+            renderItem={({ item }) => (
+              <PlaylistRow playlist={item} navigation={navigation} />
+            )}
           />
         )}
       </View>

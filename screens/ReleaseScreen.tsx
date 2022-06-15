@@ -1,43 +1,63 @@
-import { Text, View } from "../components/Themed";
+import { View, Text } from "react-native";
+
 import tw from "../tailwind";
-import { RootTabScreenProps } from "../types";
+import { RootStackScreenProps } from "../types";
 import { Image, FlatList } from "react-native";
-import { tracks } from "./SearchScreen";
 import React from "react";
 import TrackCell from "../components/TrackCell";
+import { isoDateToDate } from "../utils/dateUtils";
 
 interface IParams {
-  itemId: string;
-  otherParam: any;
+  release: any;
 }
 
-const description = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`
 export default function ReleaseScreen({
   route,
   navigation,
-}: RootTabScreenProps<"Home">) {
-  const { itemId, otherParam } = route.params as unknown as IParams;
+}: RootStackScreenProps<"Release">) {
+  const { release } = route.params as unknown as IParams;
   return (
-    <View style={tw`flex`}>
+    <View style={tw`flex-1 dark:bg-drk bg-white`}>
       <View style={tw`flex flex-row m-2`}>
         <Image
           style={tw`h-40 w-40 rounded-xl`}
           source={require("../assets/images/playlist.png")}
         />
         <View style={tw`flex m-6`}>
-            <Text style={tw`text-lg font-bold text-gry`}>{`Title: ${itemId}`}</Text>
-            <Text style={tw`text-lg font-bold text-gry`}>{`Artist: ${itemId}`}</Text>
-            <Text style={tw`text-lg font-bold text-gry`}>{`Created at: ${itemId}`}</Text>
+          <Text
+            style={tw`text-lg font-bold text-black  dark:text-white`}
+          >{`Title:`}</Text>
+                    <Text
+            style={tw`text-base font-bold text-gry  dark:text-grn`}
+          >{release.title}</Text>
+          <Text
+            style={tw`text-lg font-bold text-black  dark:text-white`}
+          >{`Artist:`}</Text>
+                    <Text
+            style={tw`text-base font-bold text-gry  dark:text-grn`}
+          >{release.author.username}</Text>
+          <Text
+            style={tw`text-lg font-bold text-black dark:text-white`}
+          >{`Created at:`}</Text>
+                    <Text
+            style={tw`text-base font-bold text-gry dark:text-grn`}
+          >{isoDateToDate(release.createdAt)}</Text>
         </View>
       </View>
-      <View style={tw`mx-2`}>
-        <Text style={tw`text-lg font-bold text-black`}>{`Description:`}</Text>
-        <Text style={tw`text-md font-bold text-gry`}>{description}</Text>
-        <Text style={tw`text-lg font-bold text-black mt-4`}>{`Tracks:`}</Text>
+      <View style={tw`flex-1 mx-2`}>
+        <Text
+          style={tw`text-lg font-bold text-black dark:text-white`}
+        >{`Description:`}</Text>
+        <Text style={tw`font-bold text-gry dark:text-grn`}>{release.description}</Text>
+        <Text
+          style={tw`text-lg font-bold text-black mt-4 dark:text-white`}
+        >{`Tracks:`}</Text>
         <FlatList
-            data={tracks}
-            renderItem={({ item }) => <TrackCell track={item} navigation={navigation} />}
-          />
+          data={release.tracks}
+          renderItem={({ item }) => (
+            <TrackCell track={item} navigation={navigation} />
+          )}
+        />
       </View>
     </View>
   );

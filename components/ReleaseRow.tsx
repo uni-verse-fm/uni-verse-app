@@ -14,8 +14,7 @@ const ReleaseRow = (props: any) => {
     <TouchableOpacity
       key={props.release.title}
       onPress={() => props.navigation.navigate("Release", {
-        itemId: 86,
-        otherParam: 'anything you want here',
+        release: props.release,
       })}
       style={tw`flex flex-row m-1`}
     >
@@ -24,8 +23,8 @@ const ReleaseRow = (props: any) => {
         source={require("../assets/images/playlist.png")}
       />
       <View style={tw`flex`}>
-        <Text style={tw`text-lg font-bold`}>{props.release.title}</Text>
-        <Text style={tw`text-gry font-bold`}>
+        <Text style={tw`text-lg font-bold dark:text-white`}>{props.release.title}</Text>
+        <Text style={tw`text-gry font-bold  dark:text-grn`}>
           {props.release.author.username}
         </Text>
       </View>

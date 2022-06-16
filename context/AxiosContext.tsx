@@ -5,7 +5,7 @@ import createAuthRefreshInterceptor from "axios-auth-refresh";
 import * as SecureStore from "expo-secure-store";
 import { Alert } from "react-native";
 
-export const baseURL = "http://192.168.0.29:3000/";
+export const baseURL = "http://192.168.0.29:3000";
 // : 'http://localhost/';
 
 export const authAxios = axios.create({

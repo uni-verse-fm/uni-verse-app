@@ -7,6 +7,7 @@ import ReleaseCell from "../components/ReleaseCell";
 import { me } from "../api/AuthAPI";
 import { useQuery } from "react-query";
 import { getUserReleases } from "../api/ReleaseAPI";
+import { getUserPlaylists } from "../api/PlaylistAPI";
 
 export default function MyProfileScreen({
   navigation,
@@ -22,6 +23,12 @@ export default function MyProfileScreen({
   const releaseQuery = useQuery(
     "myReleases",
     () => getUserReleases(meQuery.data.id as string),
+    { enabled: meQuery.status === "success" }
+  );
+
+  const playlistQuery = useQuery(
+    "myPlaylists",
+    () => getUserPlaylists(meQuery.data.id as string),
     { enabled: meQuery.status === "success" }
   );
 
@@ -54,6 +61,20 @@ export default function MyProfileScreen({
         {releaseQuery.status === "success" && (
           <FlatList
             data={releaseQuery.data}
+            renderItem={({ item }) => (
+              <ReleaseCell release={{ ...item, author: { username: meQuery.data.username }}} navigation={navigation} />
+            )}
+            style={tw`grow`}
+          />
+        )}
+      </View>
+      <View style={tw`mx-2`}>
+        <Text
+          style={tw`text-lg font-bold text-black mt-4 dark:text-white`}
+        >{`Playlists:`}</Text>
+        {playlistQuery.status === "success" && (
+          <FlatList
+            data={playlistQuery.data}
             renderItem={({ item }) => (
               <ReleaseCell release={{ ...item, author: { username: meQuery.data.username }}} navigation={navigation} />
             )}

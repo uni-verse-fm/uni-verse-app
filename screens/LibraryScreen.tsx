@@ -1,63 +1,46 @@
 import React, { useState } from "react";
-import { FlatList, TouchableHighlight } from "react-native";
+import { Alert, FlatList, TouchableHighlight } from "react-native";
 import PlaylistRow from "../components/PlaylistRow";
 import ReleaseRow from "../components/ReleaseRow";
 import { View, Text } from "react-native";
 
 import tw from "../tailwind";
 import { RootTabScreenProps } from "../types";
+import { useQuery } from "react-query";
+import { me } from "../api/AuthAPI";
+import { getUserReleases } from "../api/ReleaseAPI";
+import { getUserPlaylists } from "../api/PlaylistAPI";
 
 enum Tab {
   Releases,
   Playlists,
 }
 
-export const playlists = [
-  {
-    title: "rai",
-    owner: {
-      username: "96abdou96",
-    },
-    image: "",
-  },
-  {
-    title: "chabi",
-    owner: {
-      username: "96abdou96",
-    },
-    image: "",
-  },
-  {
-    title: "blues",
-    owner: {
-      username: "96abdou96",
-    },
-    image: "",
-  },
-];
-
-export const releases = [
-  {
-    title: "not time",
-    author: {
-      username: "96abdou96",
-    },
-    image: "",
-  },
-  {
-    title: "some space",
-    author: {
-      username: "96abdou96",
-    },
-    image: "",
-  },
-];
-
 export default function LibraryScreen({
   navigation,
 }: RootTabScreenProps<"Library">) {
   const [tab, setTab] = useState(Tab.Playlists);
 
+  const meQuery = useQuery("me", () => me().then((res) => res.data), {
+    onSuccess: (res) => {
+      if (res.status === 401) {
+        Alert.alert(JSON.stringify(res));
+      }
+    },
+  });
+
+  const releaseQuery = useQuery(
+    "myReleases",
+    () => getUserReleases(meQuery.data.id as string),
+    { enabled: meQuery.status === "success" }
+  );
+
+  const playlistQuery = useQuery(
+    "myPlaylists",
+    () => getUserPlaylists(meQuery.data.id as string),
+    { enabled: meQuery.status === "success" }
+  );
+  
   const onClickTab = (tab: Tab) => {
     setTab(tab);
   };
@@ -96,20 +79,24 @@ export default function LibraryScreen({
         </TouchableHighlight>
       </View>
       <View style={tw`flex-1`}>
-        {tab === Tab.Releases ? (
+        {tab === Tab.Releases && releaseQuery.status === "success" ? (
           <FlatList
-            data={releases}
+            data={releaseQuery.data}
             renderItem={({ item }) => (
               <ReleaseRow release={item} navigation={navigation} />
             )}
           />
-        ) : (
+        ) : tab === Tab.Playlists && playlistQuery.status === "success" ? (
           <FlatList
-            data={playlists}
+            data={playlistQuery.data}
             renderItem={({ item }) => (
               <PlaylistRow playlist={item} navigation={navigation} />
             )}
           />
+        ) : (
+            <View style={tw`flex-1 justify-center items-center`}>
+            <Text style={tw`text-gry dark:text-grn text-lg`}>No results</Text>
+          </View>
         )}
       </View>
     </View>

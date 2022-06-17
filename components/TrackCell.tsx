@@ -9,7 +9,7 @@ const TrackCell = (props: any) => {
         <Text style={tw`text-base font-bold dark:text-white`}>{props.track.title}</Text>
         <Text
           style={tw`font-bold text-gry dark:text-grn`}
-        >{`artist: ${props.track.author.username}`}</Text>
+        >{`artist: ${props.track.author?.username}`}</Text>
       </View>
       <View style={tw`flex flex-row items-center dark:text-white`}>
         <FontAwesome name="play" style={tw`text-grn m-2`} />

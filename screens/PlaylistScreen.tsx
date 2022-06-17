@@ -10,7 +10,6 @@ interface IParams {
   playlist: any;
 }
 
-const description = `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`;
 export default function PlaylistScreen({
   route,
   navigation,
@@ -28,32 +27,48 @@ export default function PlaylistScreen({
             style={tw`text-lg font-bold text-black dark:text-white`}
           >{`Title:`}</Text>
           <Text
-            style={tw`text-base font-bold text-white dark:text-grn`}
-          >{playlist.title}</Text>
+            style={tw`text-base font-bold text-gry dark:text-grn`}
+            ellipsizeMode="tail"
+            numberOfLines={1}
+          >
+            {playlist.title}
+          </Text>
           <Text
             style={tw`text-lg font-bold text-black dark:text-white`}
           >{`Owner:`}</Text>
           <Text
             style={tw`text-base font-bold text-gry dark:text-grn`}
-          >{playlist.owner.username}</Text>
+            ellipsizeMode="tail"
+            numberOfLines={1}
+          >
+            {playlist.owner.username}
+          </Text>
           <Text
             style={tw`text-lg font-bold text-black dark:text-white`}
+            ellipsizeMode="tail"
+            numberOfLines={1}
           >{`Created at:`}</Text>
-          <Text
-            style={tw`text-base font-bold text-gry dark:text-grn`}
-          >{isoDateToDate(playlist.createdAt)}</Text>
+          <Text style={tw`text-base font-bold text-gry dark:text-grn`}>
+            {isoDateToDate(playlist.createdAt)}
+          </Text>
         </View>
       </View>
       <View style={tw`flex-1 mx-2`}>
         <Text
           style={tw`text-lg font-bold text-black dark:text-white mt-4`}
         >{`Tracks:`}</Text>
-        <FlatList
-          data={playlist.tracks}
-          renderItem={({ item }) => (
-            <TrackCell track={item} navigation={navigation} />
-          )}
-        />
+        {playlist.tracks?.length > 0 ? (
+          <FlatList
+            data={playlist.tracks}
+            renderItem={({ item }) => (
+              <TrackCell track={item} navigation={navigation} />
+            )}
+          />
+        ) : (
+          <View style={tw`flex-1 justify-center items-center`}>
+            <Text style={tw`text-gry dark:text-grn`}>No tracks</Text>
+          </View>
+        )}
       </View>
     </View>
   );

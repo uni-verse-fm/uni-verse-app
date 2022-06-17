@@ -1,12 +1,11 @@
-import React, { createContext, useContext, useEffect } from "react";
+import React, { createContext, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "./AuthContext";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 import * as SecureStore from "expo-secure-store";
-import { Alert } from "react-native";
 
+export const trackSource = "http://192.168.0.29:9000/tracks/";
 export const baseURL = "http://192.168.0.29:3000";
-// : 'http://localhost/';
 
 export const authAxios = axios.create({
   baseURL,
@@ -37,15 +36,15 @@ const AxiosProvider = (props: any) => {
     }
   );
 
-  const refreshAuthLogic = (failedRequest: any) => {
+  const refreshAuthLogic = async (failedRequest: any) => {
     const data = {
-      refreshToken: authContext.authState?.refreshToken || "",
+      refreshToken: await SecureStore.getItemAsync("refreshToken") || "",
     };
 
     const options = {
       method: "GET",
       data,
-      url: `${baseURL}/auth/refresh/`,
+      url: `${baseURL}/auth/refresh`,
     };
 
     return axios(options)
@@ -74,20 +73,10 @@ const AxiosProvider = (props: any) => {
           accessToken: undefined,
           refreshToken: undefined,
         });
-
-        return Promise.reject(e);
       });
   };
 
-  useEffect(() => {
-    createAuthRefreshInterceptor(authAxios, refreshAuthLogic, {});
-    return () => {
-      authContext.setAuthState({
-        accessToken: undefined,
-        refreshToken: undefined,
-      });
-    };
-  }, []);
+  createAuthRefreshInterceptor(authAxios, refreshAuthLogic, {});
 
   return (
     <Provider

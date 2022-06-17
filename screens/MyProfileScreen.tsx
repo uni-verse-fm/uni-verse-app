@@ -2,7 +2,7 @@ import { View, Text, Alert } from "react-native";
 import tw from "../tailwind";
 import { RootStackScreenProps } from "../types";
 import { Image, FlatList } from "react-native";
-import React, { useState } from "react";
+import React from "react";
 import ReleaseCell from "../components/ReleaseCell";
 import { me } from "../api/AuthAPI";
 import { useQuery } from "react-query";
@@ -36,22 +36,28 @@ export default function MyProfileScreen({
     <View style={tw`flex-1 dark:bg-drk bg-white`}>
       <View style={tw`flex flex-row m-2`}>
         <Image
-          style={tw`h-40 w-40 rounded-full`}
+          style={tw`h-40 w-40 rounded-full m-2`}
           source={require("../assets/images/profile.jpg")}
         />
-        <View style={tw`flex mx-6 my-10`}>
+        <View style={tw`flex my-5 p-2 w-1/2`}>
           <Text
             style={tw`text-lg font-bold text-black dark:text-white`}
           >{`Usename:`}</Text>
-          <Text style={tw`text-base font-bold text-gry dark:text-grn`}>{`${
+          <Text
+            style={tw`text-base font-bold text-gry dark:text-grn`}
+            ellipsizeMode="tail"
+            numberOfLines={1}
+          >{`${
             meQuery.status === "success" ? meQuery.data.username : ""
           }`}</Text>
           <Text
             style={tw`text-lg font-bold text-black dark:text-white`}
           >{`Email:`}</Text>
-          <Text style={tw`text-base font-bold text-gry dark:text-grn`}>{`${
-            meQuery.status === "success" ? meQuery.data.email : ""
-          }`}</Text>
+          <Text
+            style={tw`text-base font-bold text-gry dark:text-grn`}
+            ellipsizeMode="tail"
+            numberOfLines={1}
+          >{meQuery.status === "success" ? meQuery.data.email : ""}</Text>
         </View>
       </View>
       <View style={tw`mx-2`}>
@@ -62,7 +68,13 @@ export default function MyProfileScreen({
           <FlatList
             data={releaseQuery.data}
             renderItem={({ item }) => (
-              <ReleaseCell release={{ ...item, author: { username: meQuery.data.username }}} navigation={navigation} />
+              <ReleaseCell
+                release={{
+                  ...item,
+                  author: { username: meQuery.data.username },
+                }}
+                navigation={navigation}
+              />
             )}
             style={tw`grow`}
           />
@@ -76,7 +88,13 @@ export default function MyProfileScreen({
           <FlatList
             data={playlistQuery.data}
             renderItem={({ item }) => (
-              <ReleaseCell release={{ ...item, author: { username: meQuery.data.username }}} navigation={navigation} />
+              <ReleaseCell
+                release={{
+                  ...item,
+                  author: { username: meQuery.data.username },
+                }}
+                navigation={navigation}
+              />
             )}
             style={tw`grow`}
           />

@@ -5,12 +5,19 @@ import Navigation, { getCurrentRoute } from "./navigation";
 import FloatingMenu from "./components/FloatingMenu";
 import tw from "./tailwind";
 import { useAppColorScheme, useDeviceContext } from "twrnc";
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { AuthContext } from "./context/AuthContext";
 import * as SecureStore from "expo-secure-store";
 import Spinner from "./components/Spinner";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { NavigationState } from "@react-navigation/native";
+import { PlayerProvider } from "./context/PlayerContext";
 
 interface IError {
   message: string;
@@ -56,8 +63,10 @@ export default function App() {
     if (state === undefined) {
       setShowFAB(false);
     } else {
-        const route = getCurrentRoute(state);
-        ['Login', 'Register'].includes(route as string) ? setShowFAB(false) : setShowFAB(true);
+      const route = getCurrentRoute(state);
+      ["Login", "Register"].includes(route as string)
+        ? setShowFAB(false)
+        : setShowFAB(true);
     }
   };
 
@@ -68,11 +77,16 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
-        <Navigation colorScheme={colorScheme} onStateChange={onNavigationStateChanged} />
-        {showFAB && <FloatingMenu />}
+        <PlayerProvider>
+          <Navigation
+            colorScheme={colorScheme}
+            onStateChange={onNavigationStateChanged}
+          />
+          {showFAB && <FloatingMenu />}
+        </PlayerProvider>
+
         <StatusBar />
       </SafeAreaProvider>
     </QueryClientProvider>
   );
 }
-

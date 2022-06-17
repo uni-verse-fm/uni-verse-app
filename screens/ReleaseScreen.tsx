@@ -27,37 +27,53 @@ export default function ReleaseScreen({
           <Text
             style={tw`text-lg font-bold text-black  dark:text-white`}
           >{`Title:`}</Text>
-                    <Text
+          <Text
             style={tw`text-base font-bold text-gry  dark:text-grn`}
-          >{release.title}</Text>
+            ellipsizeMode="tail"
+            numberOfLines={1}
+          >
+            {release.title}
+          </Text>
           <Text
             style={tw`text-lg font-bold text-black  dark:text-white`}
           >{`Artist:`}</Text>
-                    <Text
+          <Text
             style={tw`text-base font-bold text-gry  dark:text-grn`}
-          >{release.author.username}</Text>
+            ellipsizeMode="tail"
+            numberOfLines={1}
+          >
+            {release.author.username}
+          </Text>
           <Text
             style={tw`text-lg font-bold text-black dark:text-white`}
           >{`Created at:`}</Text>
-                    <Text
-            style={tw`text-base font-bold text-gry dark:text-grn`}
-          >{isoDateToDate(release.createdAt)}</Text>
+          <Text style={tw`text-base font-bold text-gry dark:text-grn`}>
+            {isoDateToDate(release.createdAt)}
+          </Text>
         </View>
       </View>
       <View style={tw`flex-1 mx-2`}>
         <Text
           style={tw`text-lg font-bold text-black dark:text-white`}
         >{`Description:`}</Text>
-        <Text style={tw`font-bold text-gry dark:text-grn`}>{release.description}</Text>
+        <Text style={tw`font-bold text-gry dark:text-grn`}>
+          {release.description}
+        </Text>
         <Text
           style={tw`text-lg font-bold text-black mt-4 dark:text-white`}
         >{`Tracks:`}</Text>
-        <FlatList
-          data={release.tracks}
-          renderItem={({ item }) => (
-            <TrackCell track={item} navigation={navigation} />
-          )}
-        />
+        {release.tracks?.length > 0 ? (
+          <FlatList
+            data={release.tracks}
+            renderItem={({ item }) => (
+              <TrackCell track={item} navigation={navigation} />
+            )}
+          />
+        ) : (
+          <View style={tw`flex-1 justify-center items-center`}>
+            <Text style={tw`text-gry dark:text-grn`}>No tracks</Text>
+          </View>
+        )}
       </View>
     </View>
   );

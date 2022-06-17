@@ -1,14 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useContext } from "react";
-import {
-  Platform,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { Platform, Image, TouchableOpacity } from "react-native";
 
 import { View, Text } from "react-native";
-import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { Header } from "react-native/Libraries/NewAppScreen";
 import { AuthContext } from "../context/AuthContext";
 
 import tw from "../tailwind";
@@ -59,25 +53,27 @@ export default function ModalScreen({
         <View
           style={tw`flex-1 justify-center items-center dark:bg-drk bg-white`}
         >
-          <View style={tw`bg-grn px-3 py-1 rounded-full m-1`}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.popToTop();
-                navigation.navigate("Login");
-              }}
-            >
-              <Text style={tw`text-lg font-bold text-white`}>Login</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={tw`bg-gry px-3 py-1 rounded-full m-1`}>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.popToTop();
-                navigation.navigate("Register");
-              }}
-            >
-              <Text style={tw`text-lg font-bold text-white`}>Register</Text>
-            </TouchableOpacity>
+          <View>
+            <View style={tw`bg-grn px-3 py-1 rounded-full m-1`}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.popToTop();
+                  navigation.navigate("Login");
+                }}
+              >
+                <Text style={tw`text-xl font-bold text-white text-center`}>Login</Text>
+              </TouchableOpacity>
+            </View>
+            <View style={tw`bg-gry px-3 py-1 rounded-full m-1`}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.popToTop();
+                  navigation.navigate("Register");
+                }}
+              >
+                <Text style={tw`text-xl font-bold text-white text-center`}>Register</Text>
+              </TouchableOpacity>
+            </View>
           </View>
           {/* Use a light status bar on iOS to account for the black space above the modal */}
           <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />

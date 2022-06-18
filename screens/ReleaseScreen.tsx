@@ -6,6 +6,7 @@ import { Image, FlatList } from "react-native";
 import React from "react";
 import TrackCell from "../components/TrackCell";
 import { isoDateToDate } from "../utils/dateUtils";
+import { imageSource } from "../context/AxiosContext";
 
 interface IParams {
   release: any;
@@ -21,7 +22,7 @@ export default function ReleaseScreen({
       <View style={tw`flex flex-row m-2`}>
         <Image
           style={tw`h-40 w-40 rounded-xl`}
-          source={require("../assets/images/playlist.png")}
+          source={release.coverName ? { uri: imageSource + release.coverName } : require("../assets/images/playlist.png")}
         />
         <View style={tw`flex m-6`}>
           <Text

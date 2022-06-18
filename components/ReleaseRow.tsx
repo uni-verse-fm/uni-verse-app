@@ -2,6 +2,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import React, { useContext } from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import { Types } from "../constants/types";
+import { imageSource } from "../context/AxiosContext";
 import { PlayerContext } from "../context/PlayerContext";
 import tw from "../tailwind";
 
@@ -40,7 +41,7 @@ const ReleaseRow = (props: any) => {
       <View style={tw`flex flex-row m-1`}>
         <Image
           style={tw`h-10 w-10 rounded-full m-1`}
-          source={require("../assets/images/playlist.png")}
+          source={props.release.coverName ? { uri: imageSource + props.release.coverName } : require("../assets/images/playlist.png")}
         />
         <View style={tw`flex`}>
           <Text style={tw`text-lg font-bold dark:text-white`}>

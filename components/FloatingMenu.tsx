@@ -1,7 +1,6 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { Slider } from "@miblanchard/react-native-slider";
 import React from "react";
-import { View, Image, Text } from "react-native";
+import { View } from "react-native";
 import tw from "../tailwind";
 import Player from "./Player";
 

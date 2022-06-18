@@ -5,19 +5,15 @@ import Navigation, { getCurrentRoute } from "./navigation";
 import FloatingMenu from "./components/FloatingMenu";
 import tw from "./tailwind";
 import { useAppColorScheme, useDeviceContext } from "twrnc";
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "./context/AuthContext";
 import * as SecureStore from "expo-secure-store";
 import Spinner from "./components/Spinner";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { NavigationState } from "@react-navigation/native";
 import { PlayerProvider } from "./context/PlayerContext";
+import { Pressable, TouchableOpacity } from "react-native";
+import PlayerScreen from "./screens/PlayerScreen";
 
 interface IError {
   message: string;
@@ -33,6 +29,17 @@ export default function App() {
   const authContext = useContext(AuthContext);
   const [status, setStatus] = useState("loading");
   const [showFAB, setShowFAB] = useState(false);
+  const [showPlayer, setShowPlayer] = useState(false);
+
+  const onPlayerClicked = () => {
+    setShowPlayer(true);
+    setShowFAB(false);
+  };
+
+  const onClosePlayer = () => {
+    setShowPlayer(false);
+    setShowFAB(true);
+  };
 
   const loadJWT = useCallback(async () => {
     try {
@@ -78,13 +85,19 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
         <PlayerProvider>
-          <Navigation
-            colorScheme={colorScheme}
-            onStateChange={onNavigationStateChanged}
-          />
-          {showFAB && <FloatingMenu />}
-        </PlayerProvider>
+          {showPlayer ? (
+            <PlayerScreen onClosePlayer={onClosePlayer}/>
+          ) : (
+            <Navigation
+              colorScheme={colorScheme}
+              onStateChange={onNavigationStateChanged}
+            />
+          )}
 
+          <TouchableOpacity onPress={onPlayerClicked}>
+            {showFAB && <FloatingMenu />}
+          </TouchableOpacity>
+        </PlayerProvider>
         <StatusBar />
       </SafeAreaProvider>
     </QueryClientProvider>

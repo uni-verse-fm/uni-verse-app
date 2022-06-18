@@ -6,6 +6,7 @@ import { trackSource } from "../context/AxiosContext";
 import { PlayerContext } from "../context/PlayerContext";
 import tw from "../tailwind";
 import { Audio } from "expo-av";
+
 const Player = () => {
   const { state } = useContext(PlayerContext);
   const [sound, setSound] = useState<Audio.Sound>();
@@ -16,12 +17,12 @@ const Player = () => {
 
   const [playing, setPlaying] = useState<boolean>(false);
   const [time, setTime] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
   const [tracks, setTracks] = useState(state.player.tracks);
 
   useEffect(() => {
     return sound
       ? () => {
-          console.log("Unloading Sound");
           sound.unloadAsync();
         }
       : undefined;
@@ -29,11 +30,19 @@ const Player = () => {
 
   const onTracksChange = async (newTracks: any) => {
     setTracks(newTracks);
-    console.debug(newTracks[0]);
     const newUrl =
       trackSource + newTracks[state.player.trackIndex || 0].fileName;
 
+    await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
+
     const sound = new Audio.Sound();
+
+    sound.setOnPlaybackStatusUpdate((status) => {
+      if (status.isLoaded) {
+        setTime(status.positionMillis);
+        setDuration(status.durationMillis || 0);
+      }
+    });
     await sound.loadAsync({ uri: newUrl });
 
     setSound(sound);
@@ -44,6 +53,14 @@ const Player = () => {
   useEffect(() => {
     state.player.tracks?.length && onTracksChange(state.player.tracks);
   }, [state.player.tracks]);
+
+  React.useEffect(() => {
+    return sound
+      ? () => {
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
 
   const onPlayPauseClick = async () => {
     if (sound) {
@@ -87,11 +104,11 @@ const Player = () => {
         <View style={tw`flex flex-row items-center h-6`}>
           <View style={tw`grow mx-1`}>
             <Slider
-              value={3}
-              minimumValue={1}
-              maximumValue={5}
+              value={time}
+              minimumValue={0}
+              maximumValue={duration}
               step={1}
-              trackClickable={true}
+              trackClickable={false}
             />
           </View>
         </View>

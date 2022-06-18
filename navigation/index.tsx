@@ -69,6 +69,7 @@ function GuestNavigator() {
   return (
     <Stack.Navigator>
       <Stack.Screen
+        key="Guest-root"
         name="Root"
         component={BottomGuestTabNavigator}
         options={{
@@ -76,30 +77,7 @@ function GuestNavigator() {
         }}
       />
       <Stack.Screen
-        name="Release"
-        component={ReleaseScreen}
-        options={{
-          headerStyle: tw`bg-white dark:bg-drk`,
-          headerTitleStyle: tw`text-black dark:text-white`,
-        }}
-      />
-      <Stack.Screen
-        name="Playlist"
-        component={PlaylistScreen}
-        options={{
-          headerStyle: tw`bg-white dark:bg-drk`,
-          headerTitleStyle: tw`text-black dark:text-white`,
-        }}
-      />
-      <Stack.Screen
-        name="User"
-        component={UserScreen}
-        options={{
-          headerStyle: tw`bg-white dark:bg-drk`,
-          headerTitleStyle: tw`text-black dark:text-white`,
-        }}
-      />
-      <Stack.Screen
+        key="Login"
         name="Login"
         component={LoginScreen}
         options={{
@@ -108,6 +86,7 @@ function GuestNavigator() {
         }}
       />
       <Stack.Screen
+        key="Register"
         name="Register"
         component={RegisterScreen}
         options={{
@@ -115,33 +94,26 @@ function GuestNavigator() {
           headerTitleStyle: tw`text-black dark:text-white`,
         }}
       />
-      <Stack.Screen
-        name="NotFound"
-        component={NotFoundScreen}
-        options={{
-          title: "Oops!",
-          headerStyle: tw`bg-white dark:bg-drk`,
-          headerTitleStyle: tw`text-black dark:text-white`,
-        }}
-      />
-      <Stack.Group screenOptions={{ presentation: "modal" }}>
+      {screens.map((item, index) => (
         <Stack.Screen
-          name="Modal"
-          component={ModalScreen}
+          key={index}
+          name={item.name as keyof RootStackParamList}
+          component={item.screen}
           options={{
             headerStyle: tw`bg-white dark:bg-drk`,
             headerTitleStyle: tw`text-black dark:text-white`,
           }}
         />
-      </Stack.Group>
+      ))}
     </Stack.Navigator>
   );
 }
 
 function AuthenticatedNavigator() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator key="auth-nav">
       <Stack.Screen
+        key="Auth-root"
         name="Root"
         component={BottomAuthenticatedTabNavigator}
         options={{
@@ -149,30 +121,7 @@ function AuthenticatedNavigator() {
         }}
       />
       <Stack.Screen
-        name="Release"
-        component={ReleaseScreen}
-        options={{
-          headerStyle: tw`bg-white dark:bg-drk`,
-          headerTitleStyle: tw`text-black dark:text-white`,
-        }}
-      />
-      <Stack.Screen
-        name="Playlist"
-        component={PlaylistScreen}
-        options={{
-          headerStyle: tw`bg-white dark:bg-drk`,
-          headerTitleStyle: tw`text-black dark:text-white`,
-        }}
-      />
-      <Stack.Screen
-        name="User"
-        component={UserScreen}
-        options={{
-          headerStyle: tw`bg-white dark:bg-drk`,
-          headerTitleStyle: tw`text-black dark:text-white`,
-        }}
-      />
-      <Stack.Screen
+        key="MyProfile"
         name="MyProfile"
         component={MyProfileScreen}
         options={{
@@ -180,25 +129,17 @@ function AuthenticatedNavigator() {
           headerTitleStyle: tw`text-black dark:text-white`,
         }}
       />
-      <Stack.Screen
-        name="NotFound"
-        component={NotFoundScreen}
-        options={{
-          title: "Oops!",
-          headerStyle: tw`bg-white dark:bg-drk`,
-          headerTitleStyle: tw`text-black dark:text-white`,
-        }}
-      />
-      <Stack.Group screenOptions={{ presentation: "modal" }}>
+      {screens.map((item) => (
         <Stack.Screen
-          name="Modal"
-          component={ModalScreen}
+          key={item.name}
+          name={item.name as keyof RootStackParamList}
+          component={item.screen}
           options={{
             headerStyle: tw`bg-white dark:bg-drk`,
             headerTitleStyle: tw`text-black dark:text-white`,
           }}
         />
-      </Stack.Group>
+      ))}
     </Stack.Navigator>
   );
 }
@@ -324,17 +265,17 @@ function BottomGuestTabNavigator() {
 }
 
 export const getCurrentRoute = (
-    state: NavigationState | Required<NavigationState['routes'][0]>['state'],
-  ): string | undefined => {
-    if (state.index === undefined || state.index < 0) {
-      return undefined;
-    }
-    const nestedState = state.routes[state.index].state;
-    if (nestedState !== undefined) {
-      return getCurrentRoute(nestedState);
-    }
-    return state.routes[state.index].name;
-  };
+  state: NavigationState | Required<NavigationState["routes"][0]>["state"]
+): string | undefined => {
+  if (state.index === undefined || state.index < 0) {
+    return undefined;
+  }
+  const nestedState = state.routes[state.index].state;
+  if (nestedState !== undefined) {
+    return getCurrentRoute(nestedState);
+  }
+  return state.routes[state.index].name;
+};
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -345,3 +286,26 @@ function TabBarIcon(props: {
 }) {
   return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
 }
+
+const screens = [
+  {
+    name: "Release",
+    screen: ReleaseScreen,
+  },
+  {
+    name: "Playlist",
+    screen: PlaylistScreen,
+  },
+  {
+    name: "User",
+    screen: UserScreen,
+  },
+  {
+    name: "NotFound",
+    screen: NotFoundScreen,
+  },
+  {
+    name: "Modal",
+    screen: ModalScreen,
+  },
+];

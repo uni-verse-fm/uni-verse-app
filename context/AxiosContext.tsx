@@ -5,6 +5,7 @@ import createAuthRefreshInterceptor from "axios-auth-refresh";
 import * as SecureStore from "expo-secure-store";
 
 export const trackSource = "http://192.168.0.29:9000/tracks/";
+export const imageSource = "http://192.168.0.29:9000/images/";
 export const baseURL = "http://192.168.0.29:3000";
 
 export const authAxios = axios.create({

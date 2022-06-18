@@ -1,41 +1,63 @@
-import React, { createContext, useReducer, Dispatch } from "react";
+import { Audio } from "expo-av";
+import React, {
+  createContext,
+  useReducer,
+  Dispatch,
+  useState,
+  useEffect,
+} from "react";
 import { ActionMap, Track, Types } from "../constants/types";
+import { trackSource } from "./AxiosContext";
 
 type PlayerType = {
-  className?: string;
+  position: number;
+  duration: number;
+  isLoaded: boolean;
+  isPlaying: boolean;
+};
+
+type ReducerPlayerType = {
   tracks: Track[];
   trackIndex?: number;
 };
 
-type InitialStateType = {
-  player: PlayerType;
+const initialState: ReducerPlayerType = {
+  tracks: [],
+  trackIndex: 0,
 };
 
-const initialState = {
-  player: {
-    className: "mt-auto",
-    tracks: [],
-    trackIndex: 0,
-  },
+type TrackInfo = {
+  title: string;
+  author: string;
+};
+
+type InitialPlayerType = {
+  tracks: Track[];
+  trackIndex?: number;
+  playerState: PlayerType;
+  trackInfo: TrackInfo;
+  unload: () => void;
+  nextTrack: () => void;
+  previousTrack: () => void;
+  hasNext: () => boolean;
+  hasPrevious: () => boolean;
+  onPlayPauseClick: () => void;
+  onSlide: (position: number) => void;
 };
 
 type PlayerPayload = {
   [Types.PlaylistPlay]: {
-    className?: string;
     tracks: Track[];
     trackIndex: number;
   };
   [Types.ReleasePlay]: {
-    className?: string;
     tracks: Track[];
     trackIndex: number;
   };
   [Types.TrackPlay]: {
-    className?: string;
     track: Track;
   };
   [Types.RandomPlay]: {
-    className?: string;
     tracks: Track[];
   };
 };
@@ -43,29 +65,28 @@ type PlayerPayload = {
 export type PlayerActions =
   ActionMap<PlayerPayload>[keyof ActionMap<PlayerPayload>];
 
-export const playerReducer = (state: PlayerType, action: PlayerActions) => {
+export const playerReducer = (
+  state: ReducerPlayerType,
+  action: PlayerActions
+) => {
   switch (action.type) {
     case Types.PlaylistPlay:
       return {
         ...action.payload,
-        className: action.payload.className || "mt-auto",
         trackIndex: action.payload.trackIndex || 0,
       };
     case Types.ReleasePlay:
       return {
         ...action.payload,
-        className: action.payload.className || "mt-auto",
         trackIndex: action.payload.trackIndex || 0,
       };
     case Types.TrackPlay:
       return {
-        className: action.payload.className || "mt-auto",
         tracks: [action.payload.track],
         trackIndex: 0,
       };
     case Types.RandomPlay:
       return {
-        className: action.payload.className || "mt-auto",
         tracks: action.payload.tracks,
       };
     default:
@@ -74,22 +95,188 @@ export const playerReducer = (state: PlayerType, action: PlayerActions) => {
 };
 
 const PlayerContext = createContext<{
-  state: InitialStateType;
+  state: InitialPlayerType;
   dispatch: Dispatch<PlayerActions>;
 }>({
-  state: initialState,
+  state: {} as InitialPlayerType,
   dispatch: () => null,
 });
 
-const mainReducer = ({ player }: InitialStateType, action: PlayerActions) => ({
-  player: playerReducer(player, action),
-});
+const mainReducer = (props: ReducerPlayerType, action: PlayerActions) =>
+  playerReducer(props, action);
 
 const PlayerProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(mainReducer, initialState);
+  const [playing, setPlaying] = useState<boolean>(false);
+  const [position, setPosition] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
+  const [sound, setSound] = useState<Audio.Sound>();
+
+  const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(
+    state.trackIndex || 0
+  );
+
+  const unload = () => false;
+  const hasNext = () =>
+    state.tracks ? currentTrackIndex + 1 < state.tracks?.length : false;
+  const hasPrevious = () => (state.tracks ? currentTrackIndex - 1 >= 0 : false);
+
+  const nextTrack = async (loop: boolean = false) => {
+    if (currentTrackIndex + 1 < state.tracks?.length && sound) {
+      const newUrl = trackSource + state.tracks[currentTrackIndex + 1].fileName;
+      setCurrentTrackIndex(currentTrackIndex + 1);
+      await sound
+        ?.unloadAsync()
+        .then(
+          async () =>
+            await sound
+              .loadAsync({ uri: newUrl })
+              .then(
+                async () =>
+                  playing &&
+                  (await sound
+                    .playAsync()
+                    .then(() => setPlaying(true))
+                    .catch(() => setPlaying(false)))
+              )
+              .catch(() => setPlaying(false))
+        )
+        .catch(() => setPlaying(false));
+    } else if (loop && sound) {
+      const newUrl = trackSource + state.tracks[0].fileName;
+      setCurrentTrackIndex(0);
+      await sound
+        ?.unloadAsync()
+        .then(
+          async () =>
+            await sound
+              .loadAsync({ uri: newUrl })
+              .then(
+                async () =>
+                  await sound
+                    .playAsync()
+                    .then(() => setPlaying(true))
+                    .catch(() => setPlaying(false))
+              )
+              .catch(() => setPlaying(false))
+        )
+        .catch(() => setPlaying(false));
+    } else {
+      setPlaying(false);
+    }
+  };
+
+  const previousTrack = async () => {
+    if (currentTrackIndex - 1 >= 0 && sound) {
+      const newUrl = trackSource + state.tracks[currentTrackIndex - 1].fileName;
+      setCurrentTrackIndex(currentTrackIndex - 1);
+
+      await sound?.unloadAsync();
+      await sound?.loadAsync({ uri: newUrl });
+      playing &&
+        (await sound
+          ?.playAsync()
+          .then(() => setPlaying(true))
+          .catch(() => setPlaying(false)));
+    }
+  };
+
+  const onPlayPauseClick = async () => {
+    sound &&
+      (await sound
+        .getStatusAsync()
+        .then(async (status) => {
+          if (status.isLoaded && status.isPlaying) {
+            await sound?.pauseAsync().then(() => setPlaying(false));
+          } else if (
+            status.isLoaded &&
+            Math.floor((status.durationMillis || 0) / 100) ===
+            Math.floor(status.positionMillis / 100) &&
+            !hasNext()
+          ) {
+            await nextTrack(true);
+          } else if (
+            status.isLoaded &&
+            Math.floor((status.durationMillis || 0) / 100) ===
+            Math.floor(status.positionMillis / 100) &&
+            hasNext()
+          ) {
+            await nextTrack();
+          } else {
+            await sound?.playAsync().then(() => setPlaying(true));
+          }
+        })
+        .catch(() => setPlaying(false)));
+  };
+
+  useEffect(() => {
+    return sound
+      ? () => {
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
+
+  const onTracksChange = async (newTracks: any) => {
+    const newUrl = trackSource + newTracks[currentTrackIndex].fileName;
+
+    await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
+
+    const sound = new Audio.Sound();
+
+    sound.setOnPlaybackStatusUpdate((status) => {
+      if (status.isLoaded) {
+        setPosition(status.positionMillis);
+        setDuration(status.durationMillis || 0);
+      }
+    });
+    await sound.loadAsync({ uri: newUrl });
+
+    setSound(sound);
+    await sound
+      ?.playAsync()
+      .then(() => setPlaying(true))
+      .catch(() => setPlaying(false));
+  };
+
+  const onSlide = async (value: number) => {
+    await sound
+      ?.setPositionAsync(value)
+      .then(() => setPosition(value))
+      .catch(() => setPosition(0));
+  };
+
+  useEffect(() => {
+    state.tracks?.length && onTracksChange(state.tracks);
+  }, [state.tracks]);
 
   return (
-    <PlayerContext.Provider value={{ state, dispatch }}>
+    <PlayerContext.Provider
+      value={{
+        state: {
+          tracks: state.tracks,
+          trackIndex: state.trackIndex,
+          trackInfo: {
+            title: state.tracks?.[currentTrackIndex]?.title,
+            author: state.tracks?.[currentTrackIndex]?.author.username,
+          },
+          playerState: {
+            position,
+            duration,
+            isLoaded: true,
+            isPlaying: playing,
+          },
+          unload,
+          hasNext,
+          hasPrevious,
+          nextTrack,
+          previousTrack,
+          onPlayPauseClick,
+          onSlide,
+        },
+        dispatch,
+      }}
+    >
       {children}
     </PlayerContext.Provider>
   );

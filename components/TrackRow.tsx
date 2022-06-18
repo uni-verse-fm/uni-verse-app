@@ -11,7 +11,6 @@ const TrackRow = (props: any) => {
     dispatch({
       type: Types.TrackPlay,
       payload: {
-        className: "mt-auto",
         track: track,
       },
     });

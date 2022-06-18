@@ -4,7 +4,7 @@ import { RootStackScreenProps } from "../types";
 import { Image, FlatList } from "react-native";
 import React from "react";
 import TrackCell from "../components/TrackCell";
-import { isoDateToDate } from "../utils/dateUtils";
+import { isoDateToDate } from "../utils/dateTimeUtils";
 
 interface IParams {
   playlist: any;

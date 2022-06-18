@@ -13,7 +13,6 @@ const PlaylistRow = (props: any) => {
       type: Types.PlaylistPlay,
       payload: {
         tracks: playlist.tracks || [],
-        className: "mt-auto",
         trackIndex: 0,
       },
     });

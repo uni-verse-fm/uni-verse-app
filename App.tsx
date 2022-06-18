@@ -12,7 +12,7 @@ import Spinner from "./components/Spinner";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { NavigationState } from "@react-navigation/native";
 import { PlayerProvider } from "./context/PlayerContext";
-import { Pressable, TouchableOpacity } from "react-native";
+import { TouchableOpacity } from "react-native";
 import PlayerScreen from "./screens/PlayerScreen";
 
 interface IError {
@@ -71,7 +71,7 @@ export default function App() {
       setShowFAB(false);
     } else {
       const route = getCurrentRoute(state);
-      ["Login", "Register"].includes(route as string)
+      ["Login", "Register", "Modal"].includes(route as string)
         ? setShowFAB(false)
         : setShowFAB(true);
     }

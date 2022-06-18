@@ -22,7 +22,6 @@ const ReleaseRow = (props: any) => {
       type: Types.ReleasePlay,
       payload: {
         tracks: release.tracks || [],
-        className: "mt-auto",
         trackIndex: 0,
       },
     });

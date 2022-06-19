@@ -8,13 +8,21 @@ import { secondsToHMS } from "../utils/dateTimeUtils";
 
 interface IPlayerScrenn {
   onClosePlayer: () => void;
+  visible: boolean;
 }
 
 const PlayerScreen = (props: IPlayerScrenn) => {
   const { state } = useContext(PlayerContext);
 
   return (
-    <Modal animationType={"slide"}>
+    <Modal
+      animationType="fade"
+      transparent={false}
+      visible={props.visible}
+      onRequestClose={() => {
+        props.onClosePlayer();
+      }}
+    >
       <View style={tw`flex-1 p-4 bg-white dark:bg-drk`}>
         <TouchableOpacity style={tw`my-4`} onPress={props.onClosePlayer}>
           <FontAwesome
@@ -30,14 +38,20 @@ const PlayerScreen = (props: IPlayerScrenn) => {
               style={tw`w-72 h-72 rounded-2xl`}
             />
             <View style={tw`flex items-center m-4`}>
-              <Text style={tw`text-2xl text-black dark:text-white`}>{state.trackInfo?.title}</Text>
-              <Text style={tw`text-xl text-black dark:text-white`}>{state.trackInfo?.author}</Text>
+              <Text style={tw`text-2xl text-black dark:text-white`}>
+                {state.trackInfo?.title}
+              </Text>
+              <Text style={tw`text-xl text-black dark:text-white`}>
+                {state.trackInfo?.author}
+              </Text>
             </View>
           </View>
 
           <View style={tw`flex items-center text-center`}>
             <View style={tw`flex flex-row items-center h-6`}>
-              <Text style={tw`text-black dark:text-white`}>{secondsToHMS(state.playerState?.position)}</Text>
+              <Text style={tw`text-black dark:text-white`}>
+                {secondsToHMS(state.playerState?.position)}
+              </Text>
               <View style={tw`grow mx-1`}>
                 <Slider
                   value={state.playerState?.position || 0}
@@ -50,7 +64,9 @@ const PlayerScreen = (props: IPlayerScrenn) => {
                   }
                 />
               </View>
-              <Text style={tw`text-black dark:text-white`}>{secondsToHMS(state.playerState?.duration)}</Text>
+              <Text style={tw`text-black dark:text-white`}>
+                {secondsToHMS(state.playerState?.duration)}
+              </Text>
             </View>
             <View style={tw`flex flex-row justify-between m-4`}>
               <TouchableOpacity
@@ -82,7 +98,9 @@ const PlayerScreen = (props: IPlayerScrenn) => {
                   <FontAwesome
                     name="play"
                     size={35}
-                    style={tw`${ state.playerState?.duration ? "text-drk" : "text-gry"} my-2 ml-3.5`}
+                    style={tw`${
+                      state.playerState?.duration ? "text-drk" : "text-gry"
+                    } my-2 ml-3.5`}
                   />
                 )}
               </TouchableOpacity>

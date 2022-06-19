@@ -69,6 +69,7 @@ const AddPlaylistForm = ({ cancel }) => {
               key="title"
               style={tw`text-base h-10`}
               placeholder="Enter playlist name"
+              placeholderTextColor="#616161"
               onChangeText={handleChange("title")}
               onBlur={handleBlur("title")}
               value={values.title}

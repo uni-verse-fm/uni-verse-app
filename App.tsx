@@ -12,7 +12,6 @@ import Spinner from "./components/Spinner";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { NavigationState } from "@react-navigation/native";
 import { PlayerProvider } from "./context/PlayerContext";
-import { TouchableOpacity } from "react-native";
 import PlayerScreen from "./screens/PlayerScreen";
 
 interface IError {
@@ -85,14 +84,11 @@ export default function App() {
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
         <PlayerProvider>
-          {showPlayer ? (
-            <PlayerScreen onClosePlayer={onClosePlayer} />
-          ) : (
-            <Navigation
-              colorScheme={colorScheme}
-              onStateChange={onNavigationStateChanged}
-            />
-          )}
+          <Navigation
+            colorScheme={colorScheme}
+            onStateChange={onNavigationStateChanged}
+          />
+          <PlayerScreen visible={showPlayer} onClosePlayer={onClosePlayer} />
           {showFAB && <FloatingMenu onPlayerClicked={onPlayerClicked} />}
         </PlayerProvider>
         <StatusBar />

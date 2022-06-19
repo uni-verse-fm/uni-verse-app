@@ -1,7 +1,7 @@
 import { View, Text, Alert, Button, ScrollView } from "react-native";
 import tw from "../tailwind";
 import { RootStackScreenProps } from "../types";
-import { Image, FlatList } from "react-native";
+import { Image } from "react-native";
 import React, { useContext, useState } from "react";
 import ReleaseCell from "../components/ReleaseCell";
 import { me } from "../api/AuthAPI";
@@ -103,8 +103,9 @@ export default function MyProfileScreen({
           style={tw`text-lg font-bold text-black mt-4 dark:text-white`}
         >{`Releases:`}</Text>
         {releaseQuery.status === "success" &&
-          releaseQuery.data.map((item) => (
+          releaseQuery.data.map((item, index) => (
             <ReleaseCell
+            key={`release-${index}`}
               release={{
                 ...item,
                 author: { username: meQuery.data.username },
@@ -118,8 +119,9 @@ export default function MyProfileScreen({
           style={tw`text-lg font-bold text-black mt-4 dark:text-white`}
         >{`Playlists:`}</Text>
         {playlistQuery.status === "success" &&
-          playlistQuery.data.map((item) => (
+          playlistQuery.data.map((item, index) => (
             <ReleaseCell
+            key={`playlist-${index}`}
               release={{
                 ...item,
                 author: { username: meQuery.data.username },

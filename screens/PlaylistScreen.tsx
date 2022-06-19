@@ -1,20 +1,47 @@
-import { View, Text } from "react-native";
+import { View, Text, Button, Alert } from "react-native";
 import tw from "../tailwind";
 import { RootStackScreenProps } from "../types";
 import { Image, FlatList } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import TrackCell from "../components/TrackCell";
 import { isoDateToDate } from "../utils/dateTimeUtils";
+import ConfirmAlert from "../components/ConfirmDialog";
+import { useMutation, useQueryClient } from "react-query";
+import { deletePlaylist } from "../api/PlaylistAPI";
 
 interface IParams {
   playlist: any;
+  me?: boolean;
 }
 
 export default function PlaylistScreen({
   route,
   navigation,
 }: RootStackScreenProps<"Playlist">) {
-  const { playlist } = route.params as unknown as IParams;
+  const { playlist, me } = route.params as unknown as IParams;
+  const [modalVisible, setModalVisible] = useState(false);
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation("deletePlaylist", deletePlaylist, {
+    onError: () => {
+      Alert.alert("Can't delete playlist now, try later.");
+    },
+    onSuccess: async (res) => {
+      if (res.status !== 200) {
+        Alert.alert("Can't delete playlist now, try later.");
+      } else {
+        Alert.alert("Playlist deleted");
+        await queryClient.refetchQueries("myPlaylists");
+        navigation.goBack();
+      }
+    },
+  });
+
+  const handleConfirm = () => {
+    mutate(playlist._id);
+    setModalVisible(false);
+  };
+
   return (
     <View style={tw`flex-1 dark:bg-drk bg-white`}>
       <View style={tw`flex flex-row m-2`}>
@@ -54,8 +81,17 @@ export default function PlaylistScreen({
         </View>
       </View>
       <View style={tw`flex-1 mx-2`}>
+        {me && (
+          <View style={tw`bg-rd rounded-full`}>
+            <Button
+              color="white"
+              title="delete"
+              onPress={() => setModalVisible(true)}
+            />
+          </View>
+        )}
         <Text
-          style={tw`text-lg font-bold text-black dark:text-white mt-4`}
+          style={tw`text-lg font-bold text-black dark:text-white mt-2`}
         >{`Tracks:`}</Text>
         {playlist.tracks?.length > 0 ? (
           <FlatList
@@ -70,6 +106,13 @@ export default function PlaylistScreen({
           </View>
         )}
       </View>
+      {me && (
+        <ConfirmAlert
+          onConfirm={handleConfirm}
+          visible={modalVisible}
+          setModalVisible={setModalVisible}
+        />
+      )}
     </View>
   );
 }

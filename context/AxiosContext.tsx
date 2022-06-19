@@ -50,7 +50,7 @@ const AxiosProvider = (props: any) => {
 
         authContext.setAuthState({
           refreshToken,
-          accessToken: tokenRefreshResponse.data.accessToken as string,
+          accessToken: tokenRefreshResponse.data.accessToken,
           authenticated: !!tokenRefreshResponse.data.accessToken,
         });
 

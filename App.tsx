@@ -86,17 +86,14 @@ export default function App() {
       <SafeAreaProvider>
         <PlayerProvider>
           {showPlayer ? (
-            <PlayerScreen onClosePlayer={onClosePlayer}/>
+            <PlayerScreen onClosePlayer={onClosePlayer} />
           ) : (
             <Navigation
               colorScheme={colorScheme}
               onStateChange={onNavigationStateChanged}
             />
           )}
-
-          <TouchableOpacity onPress={onPlayerClicked}>
-            {showFAB && <FloatingMenu />}
-          </TouchableOpacity>
+          {showFAB && <FloatingMenu onPlayerClicked={onPlayerClicked} />}
         </PlayerProvider>
         <StatusBar />
       </SafeAreaProvider>

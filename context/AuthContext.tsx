@@ -1,4 +1,4 @@
-import React, { createContext, Dispatch, useState } from "react";
+import React, { createContext, Dispatch, useRef, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 
 type AuthStateType = {
@@ -17,6 +17,7 @@ const AuthContext = createContext<InitialStateType>({} as InitialStateType);
 
 const AuthProvider = (props: any) => {
   const [authState, setAuthState] = useState<AuthStateType>();
+  const isCancelled = useRef(false);
 
   const logout = async () => {
     await SecureStore.deleteItemAsync("refreshToken");
@@ -28,6 +29,12 @@ const AuthProvider = (props: any) => {
       authenticated: false,
     });
   };
+
+  React.useEffect(() => {
+    return () => {
+      isCancelled.current = true;
+    };
+  }, []);
 
   const getAccessToken = () => {
     return authState?.accessToken;

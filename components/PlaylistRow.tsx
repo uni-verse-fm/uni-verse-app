@@ -24,6 +24,7 @@ const PlaylistRow = (props: any) => {
       onPress={() =>
         props.navigation.navigate("Playlist", {
           playlist: props.playlist,
+          me: true,
         })
       }
       style={tw`flex justify-between flex-row m-1`}
@@ -35,10 +36,10 @@ const PlaylistRow = (props: any) => {
         />
         <View style={tw`flex`}>
           <Text style={tw`text-lg font-bold dark:text-white`}>
-            {props.playlist.title}
+            {props.playlist?.title}
           </Text>
           <Text style={tw`text-gry font-bold dark:text-grn`}>
-            {props.playlist.owner.username}
+            {props.playlist?.owner?.username}
           </Text>
         </View>
       </View>

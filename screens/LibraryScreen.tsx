@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { Alert, FlatList, TouchableHighlight } from "react-native";
+import {
+  Alert,
+  Button,
+  FlatList,
+  TouchableHighlight,
+  TouchableOpacity,
+} from "react-native";
 import PlaylistRow from "../components/PlaylistRow";
 import ReleaseRow from "../components/ReleaseRow";
 import { View, Text } from "react-native";
@@ -10,6 +16,7 @@ import { useQuery } from "react-query";
 import { me } from "../api/AuthAPI";
 import { getUserReleases } from "../api/ReleaseAPI";
 import { getUserPlaylists } from "../api/PlaylistAPI";
+import AddPlaylistForm from "../components/AddPlaylistForm";
 
 enum Tab {
   Releases,
@@ -20,6 +27,9 @@ export default function LibraryScreen({
   navigation,
 }: RootTabScreenProps<"Library">) {
   const [tab, setTab] = useState(Tab.Playlists);
+  const [addOpen, setAddOpen] = useState(false);
+
+  const toggleAddOpen = () => setAddOpen(!addOpen);
 
   const meQuery = useQuery("me", () => me().then((res) => res.data), {
     onSuccess: (res) => {
@@ -40,7 +50,7 @@ export default function LibraryScreen({
     () => getUserPlaylists(meQuery.data.id as string),
     { enabled: meQuery.status === "success" }
   );
-  
+
   const onClickTab = (tab: Tab) => {
     setTab(tab);
   };
@@ -87,14 +97,25 @@ export default function LibraryScreen({
             )}
           />
         ) : tab === Tab.Playlists && playlistQuery.status === "success" ? (
-          <FlatList
-            data={playlistQuery.data}
-            renderItem={({ item }) => (
-              <PlaylistRow playlist={item} navigation={navigation} />
+          <View style={tw`flex-1`}>
+            {addOpen ? (
+              <AddPlaylistForm cancel={toggleAddOpen} />
+            ) : (
+              <TouchableOpacity style={tw`bg-grn m-1 rounded-lg`} onPress={toggleAddOpen}>
+                <Text style={tw`text-base text-drk font-bold text-center`}>
+                  Add playlist
+                </Text>
+              </TouchableOpacity>
             )}
-          />
+            <FlatList
+              data={playlistQuery.data}
+              renderItem={({ item }) => (
+                <PlaylistRow playlist={item} navigation={navigation} />
+              )}
+            />
+          </View>
         ) : (
-            <View style={tw`flex-1 justify-center items-center`}>
+          <View style={tw`flex-1 justify-center items-center`}>
             <Text style={tw`text-gry dark:text-grn text-lg`}>No results</Text>
           </View>
         )}

@@ -1,5 +1,5 @@
 import { Endoints, IUpdatePayload } from "../constants/types";
-import { publicAxios } from "../context/AxiosContext";
+import { authAxios, publicAxios } from "../context/AxiosContext";
 
 const playlistEndpoint = Endoints.Playlists;
 
@@ -9,7 +9,7 @@ const getUserPlaylists = (id: string) =>
   publicAxios.get(`${playlistEndpoint}/user/${id}`).then((res) => res.data);
 
 const createPlaylist = (data: any) =>
-  publicAxios.post(`${playlistEndpoint}`, data);
+  authAxios.post(`${playlistEndpoint}`, data);
 
 const getPlaylistByTitle = (title: string) =>
   publicAxios.get(`${playlistEndpoint}`, { params: { title } });
@@ -21,7 +21,7 @@ const updatePlaylist = (param: IUpdatePayload) =>
   publicAxios.patch(`${playlistEndpoint}/${param.id}`, param.data);
 
 const deletePlaylist = (id: String) =>
-  publicAxios.delete(`${playlistEndpoint}/${id}`);
+  authAxios.delete(`${playlistEndpoint}/${id}`);
 
 const searchPlaylist = (text: string, { signal }: any) =>
   publicAxios

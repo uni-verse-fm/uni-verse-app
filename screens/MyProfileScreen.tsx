@@ -18,6 +18,9 @@ export default function MyProfileScreen({
         Alert.alert(JSON.stringify(res));
       }
     },
+    onError: (res) => {
+        Alert.alert(JSON.stringify(res));
+    } 
   });
 
   const releaseQuery = useQuery(

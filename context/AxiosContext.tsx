@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { AuthContext } from "./AuthContext";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 import * as SecureStore from "expo-secure-store";
@@ -20,7 +20,7 @@ const AxiosContext = createContext({ authAxios, publicAxios });
 const { Provider } = AxiosContext;
 
 const AxiosProvider = (props: any) => {
-  const authContext = useContext<any>(AuthContext);
+  const authContext = useContext(AuthContext);
 
   authAxios.interceptors.request.use(
     (config) => {
@@ -38,46 +38,39 @@ const AxiosProvider = (props: any) => {
   );
 
   const refreshAuthLogic = async (failedRequest: any) => {
-    const data = {
-      refreshToken: await SecureStore.getItemAsync("refreshToken") || "",
-    };
+    const refreshToken = (await SecureStore.getItemAsync("refreshToken")) || "";
 
-    const options = {
-      method: "GET",
-      data,
-      url: `${baseURL}/auth/refresh`,
-    };
-
-    return axios(options)
+    return await axios
+      .get(`${baseURL}/auth/refresh`, {
+        headers: { Authorization: `${refreshToken}` },
+      })
       .then(async (tokenRefreshResponse) => {
         failedRequest.response.config.headers.Authorization =
           "Bearer " + tokenRefreshResponse.data.accessToken;
 
         authContext.setAuthState({
-          ...authContext.authState,
-          accessToken: tokenRefreshResponse.data.accessToken,
+          refreshToken,
+          accessToken: tokenRefreshResponse.data.accessToken as string,
+          authenticated: !!tokenRefreshResponse.data.accessToken,
         });
 
         await SecureStore.setItemAsync(
           "accessToken",
           tokenRefreshResponse.data.accessToken
         );
-        await SecureStore.setItemAsync(
-          "refreshToken",
-          authContext.authState.refreshToken
-        );
-
+        
         return Promise.resolve();
       })
-      .catch((e) => {
+      .catch((e: AxiosError) => {
         authContext.setAuthState({
           accessToken: undefined,
           refreshToken: undefined,
+          authenticated: false,
         });
       });
   };
 
-  createAuthRefreshInterceptor(authAxios, refreshAuthLogic, {});
+  createAuthRefreshInterceptor(authAxios, refreshAuthLogic);
 
   return (
     <Provider

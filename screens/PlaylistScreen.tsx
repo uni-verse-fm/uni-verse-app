@@ -85,7 +85,7 @@ export default function PlaylistScreen({
           <View style={tw`bg-rd rounded-full`}>
             <Button
               color="white"
-              title="delete"
+              title="Delete"
               onPress={() => setModalVisible(true)}
             />
           </View>
@@ -109,6 +109,7 @@ export default function PlaylistScreen({
       {me && (
         <ConfirmAlert
           onConfirm={handleConfirm}
+          message="Are you sure you want to delete this playlist?"
           visible={modalVisible}
           setModalVisible={setModalVisible}
         />

@@ -82,7 +82,7 @@ const AddPlaylistForm = ({ cancel }) => {
             <TouchableOpacity style={tw`mr-1 mb-2 grow rounded bg-drk `}>
               <Button
                 color="white"
-                title="Login"
+                title="Create"
                 onPress={() => handleSubmit()}
               />
             </TouchableOpacity>

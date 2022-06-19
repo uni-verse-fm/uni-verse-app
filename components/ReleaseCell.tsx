@@ -5,15 +5,18 @@ import { getReleaseById } from "../api/ReleaseAPI";
 import tw from "../tailwind";
 
 const ReleaseCell = (props: any) => {
-  const getRelease = useQuery("release", () =>
-    getReleaseById(props.release._id).then((res) => res.data),
+  const getRelease = useQuery(
+    "release",
+    () => getReleaseById(props.release._id).then((res) => res.data),
     { enabled: Boolean(props.release._id) }
   );
 
   return (
     <TouchableOpacity
+      key={`release-${props.release._id}`}
       onPress={() =>
-        (getRelease.status === "success") && props.navigation.navigate("Release", {
+        getRelease.status === "success" &&
+        props.navigation.navigate("Release", {
           release: getRelease.data,
         })
       }

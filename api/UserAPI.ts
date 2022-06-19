@@ -13,8 +13,8 @@ const getUserById = (id: string) => publicAxios.get(`${userEndpoint}/${id}`);
 const updateUser = (id: string, data: any) =>
   publicAxios.put(`${userEndpoint}/${id}`, JSON.stringify(data));
 
-const deleteUser = () => (id: string) =>
-  publicAxios.delete(`${userEndpoint}/${id}`);
+const deleteUser = () =>
+  authAxios.delete(`${userEndpoint}`);
 
 const onboardUser = () => publicAxios.post(`${userEndpoint}/onboard`);
 

@@ -16,7 +16,7 @@ const PlayerScreen = (props: IPlayerScrenn) => {
 
   return (
     <Modal
-      animationType="fade"
+      animationType="slide"
       transparent={false}
       visible={props.visible}
       onRequestClose={() => {

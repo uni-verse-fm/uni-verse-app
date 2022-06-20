@@ -63,8 +63,8 @@ const AddPlaylistForm = ({ cancel }) => {
       }}
     >
       {({ values, errors, handleChange, handleBlur, handleSubmit }) => (
-        <View style={tw`bg-grn m-2 rounded`}>
-          <View style={tw`bg-white m-2 rounded px-2 `}>
+        <View style={tw`bg-grn m-2 rounded-3xl`}>
+          <View style={tw`bg-white m-2 rounded-full px-2 `}>
             <TextInput
               key="title"
               style={tw`text-base h-10`}
@@ -80,7 +80,7 @@ const AddPlaylistForm = ({ cancel }) => {
           </View>
 
           <View style={tw`flex flex-row px-2 w-full`}>
-            <TouchableOpacity style={tw`mr-1 mb-2 grow rounded bg-drk `}>
+            <TouchableOpacity style={tw`mr-1 mb-2 grow rounded-full bg-drk `}>
               <Button
                 color="white"
                 title="Create"
@@ -88,7 +88,7 @@ const AddPlaylistForm = ({ cancel }) => {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              style={tw`ml-1 mb-2 grow rounded bg-rd `}
+              style={tw`ml-1 mb-2 grow rounded-full bg-rd `}
               onPress={cancel}
             >
               <Button color="white" title="Cancel" onPress={cancel} />

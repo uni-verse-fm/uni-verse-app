@@ -4,6 +4,7 @@ import { View, Text, Alert } from "react-native";
 import { useMutation, useQueryClient } from "react-query";
 import { updatePlaylist } from "../api/PlaylistAPI";
 import { PlaylistUpdateTaskAction, Track, Types } from "../constants/types";
+import { AuthContext } from "../context/AuthContext";
 import { PlayerContext } from "../context/PlayerContext";
 import CommentsScreen from "../screens/CommentsScreen";
 import tw from "../tailwind";
@@ -11,6 +12,7 @@ import ConfirmAlert from "./ConfirmDialog";
 
 const TrackCell = (props: any) => {
   const [showComments, setShowComments] = useState(false);
+  const authContext = useContext(AuthContext);
   const [trackModalVisible, setTrackModalVisible] = useState(false);
   const queryClient = useQueryClient();
   const { dispatch } = useContext(PlayerContext);
@@ -93,12 +95,14 @@ const TrackCell = (props: any) => {
           onPress={onClickTrack(props.track)}
         />
       </View>
-      <CommentsScreen
-        visible={showComments}
-        onCloseComments={onCloseComments}
-        contentId={props.track._id}
-      />
-      {props.me && props.playlistId && (
+      {authContext.authState?.authenticated && (
+        <CommentsScreen
+          visible={showComments}
+          onCloseComments={onCloseComments}
+          contentId={props.track._id}
+        />
+      )}
+      {authContext.authState?.authenticated && props.me && props.playlistId && (
         <ConfirmAlert
           onConfirm={handleConfirmTrack}
           message="Are you sure you want to remove this track?"

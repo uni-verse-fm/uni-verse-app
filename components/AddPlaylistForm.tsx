@@ -74,11 +74,10 @@ const AddPlaylistForm = ({ cancel }) => {
               onBlur={handleBlur("title")}
               value={values.title}
             />
-            {errors.title ? (
-              <Text style={tw`text-rd text-sm`}>{errors.title}</Text>
-            ) : null}
           </View>
-
+          {errors.title ? (
+            <Text style={tw`text-rd text-sm mx-2`}>{errors.title}</Text>
+          ) : null}
           <View style={tw`flex flex-row px-2 w-full`}>
             <TouchableOpacity style={tw`mr-1 mb-2 grow rounded-full bg-drk `}>
               <Button

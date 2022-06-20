@@ -16,7 +16,6 @@ export default function MyProfileScreen({
   navigation,
 }: RootStackScreenProps<"MyProfile">) {
   const [modalVisible, setModalVisible] = useState(false);
-  const queryClient = useQueryClient();
   const authContext = useContext(AuthContext);
 
   const meQuery = useQuery("me", () => me().then((res) => res.data), {
@@ -105,7 +104,7 @@ export default function MyProfileScreen({
         {releaseQuery.status === "success" &&
           releaseQuery.data.map((item, index) => (
             <ReleaseCell
-            key={`release-${index}`}
+              key={`release-${index}`}
               release={{
                 ...item,
                 author: { username: meQuery.data.username },
@@ -121,7 +120,7 @@ export default function MyProfileScreen({
         {playlistQuery.status === "success" &&
           playlistQuery.data.map((item, index) => (
             <ReleaseCell
-            key={`playlist-${index}`}
+              key={`playlist-${index}`}
               release={{
                 ...item,
                 author: { username: meQuery.data.username },

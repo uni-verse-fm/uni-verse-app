@@ -225,6 +225,7 @@ const PlayerProvider: React.FC = ({ children }) => {
         interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
         playThroughEarpieceAndroid: true,
         interruptionModeIOS: InterruptionModeIOS.DoNotMix,
+        playsInSilentModeIOS: true,
     });
 
     const sound = new Audio.Sound();

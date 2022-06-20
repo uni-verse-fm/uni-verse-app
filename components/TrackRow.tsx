@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { me } from "../api/AuthAPI";
 import { updatePlaylist } from "../api/PlaylistAPI";
 import { PlaylistUpdateTaskAction, Track, Types } from "../constants/types";
+import { AuthContext } from "../context/AuthContext";
 import { PlayerContext } from "../context/PlayerContext";
 import CommentsScreen from "../screens/CommentsScreen";
 import tw from "../tailwind";
@@ -13,6 +14,7 @@ import PlaylistSelectDialog from "./PlaylistSelectDialog";
 const TrackRow = (props: any) => {
   const { dispatch } = useContext(PlayerContext);
   const [showComments, setShowComments] = useState(false);
+  const authContext = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const queryClient = useQueryClient();
 
@@ -95,11 +97,13 @@ const TrackRow = (props: any) => {
           />
         </View>
       </View>
-      <CommentsScreen
-        visible={showComments}
-        onCloseComments={onCloseComments}
-        contentId={props.track._id}
-      />
+      {authContext.authState?.authenticated && (
+        <CommentsScreen
+          visible={showComments}
+          onCloseComments={onCloseComments}
+          contentId={props.track._id}
+        />
+      )}
       {meQuery.data?._id && (
         <PlaylistSelectDialog
           onConfirm={handleConfirm}

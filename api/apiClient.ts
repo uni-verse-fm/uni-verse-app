@@ -1,3 +1,4 @@
+import { baseURL } from './../context/AxiosContext';
 import axios from "axios";
 
 const headers = {
@@ -8,9 +9,8 @@ const headers = {
     "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Set-Cookie",
 };
 
-const BASE_API = "http://localhost:3000";
 const axiosClient = axios.create({
-  baseURL: BASE_API,
+  baseURL: baseURL,
   headers: { ...headers },
   withCredentials: true,
 });

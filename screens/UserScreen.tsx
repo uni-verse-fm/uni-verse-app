@@ -49,7 +49,7 @@ export default function UserScreen({
         <Text
           style={tw`text-lg font-bold text-black mt-4 dark:text-white`}
         >{`Releases:`}</Text>
-        {releaseQuery.status === "success" && (
+        {releaseQuery.status === "success" && releaseQuery.data.length > 0 && (
           <FlatList
             data={releaseQuery.data}
             renderItem={({ item }) => (

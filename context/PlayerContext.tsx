@@ -1,4 +1,4 @@
-import { Audio } from "expo-av";
+import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from "expo-av";
 import React, {
   createContext,
   useReducer,
@@ -220,7 +220,12 @@ const PlayerProvider: React.FC = ({ children }) => {
   const onTracksChange = async (newTracks: any) => {
     const newUrl = trackSource + newTracks[currentTrackIndex].fileName;
 
-    await Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
+    await Audio.setAudioModeAsync({ 
+        staysActiveInBackground: true,
+        interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
+        playThroughEarpieceAndroid: true,
+        interruptionModeIOS: InterruptionModeIOS.DoNotMix,
+    });
 
     const sound = new Audio.Sound();
 

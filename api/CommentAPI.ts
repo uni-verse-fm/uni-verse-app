@@ -1,10 +1,26 @@
 import { Endoints } from "../constants/types";
-import { publicAxios } from "../context/AxiosContext";
+import { authAxios, publicAxios } from "../context/AxiosContext";
 
 const commentEndpoint = Endoints.Comments;
 
-const createComment = (data: any) =>
-  publicAxios.post(`${commentEndpoint}`, JSON.stringify(data));
+export enum ModelType {
+  Track = "Track",
+  Resource = "Resource",
+}
+export interface IComment {
+  contentId: string;
+  isPositive: boolean;
+  content: string;
+  typeOfContent: ModelType;
+}
+
+export interface IResourceInfo {
+  contentId: string;
+  typeOfContent: ModelType;
+}
+
+const createComment = (data: IComment) =>
+  authAxios.post(`${commentEndpoint}`, data);
 
 const getComments = () => publicAxios.get(commentEndpoint);
 
@@ -13,6 +29,11 @@ const getCommentByTitle = (title: string) =>
 
 const getCommentById = (id: string) =>
   publicAxios.get(`${commentEndpoint}/${id}`);
+
+const getResourceComments = (resourceInfo: IResourceInfo) =>
+  authAxios.get(
+    `${commentEndpoint}/${resourceInfo.typeOfContent}/${resourceInfo.contentId}`
+  );
 
 const updateComment = (id: string, data: any) =>
   publicAxios.put(`${commentEndpoint}/${id}`, JSON.stringify(data));
@@ -27,4 +48,5 @@ export {
   getCommentById,
   updateComment,
   deleteComment,
+  getResourceComments,
 };

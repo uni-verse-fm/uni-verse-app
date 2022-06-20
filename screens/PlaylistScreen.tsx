@@ -6,8 +6,8 @@ import React, { useState } from "react";
 import TrackCell from "../components/TrackCell";
 import { isoDateToDate } from "../utils/dateTimeUtils";
 import ConfirmAlert from "../components/ConfirmDialog";
-import { useMutation, useQueryClient } from "react-query";
-import { deletePlaylist } from "../api/PlaylistAPI";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { deletePlaylist, getPlaylistById } from "../api/PlaylistAPI";
 
 interface IParams {
   playlist: any;
@@ -19,27 +19,37 @@ export default function PlaylistScreen({
   navigation,
 }: RootStackScreenProps<"Playlist">) {
   const { playlist, me } = route.params as unknown as IParams;
-  const [modalVisible, setModalVisible] = useState(false);
+  const [playlistModalVisible, setPlaylistModalVisible] = useState(false);
+
   const queryClient = useQueryClient();
 
-  const { mutate } = useMutation("deletePlaylist", deletePlaylist, {
+  const playlistMutation = useMutation("deletePlaylist", deletePlaylist, {
     onError: () => {
-      Alert.alert("Can't delete playlist now, try later.");
+      Alert.alert("Can't remove track now, try later.");
     },
     onSuccess: async (res) => {
       if (res.status !== 200) {
-        Alert.alert("Can't delete playlist now, try later.");
+        Alert.alert("Can't remove track now, try later.");
       } else {
-        Alert.alert("Playlist deleted");
+        Alert.alert("Track removed");
         await queryClient.refetchQueries("myPlaylists");
         navigation.goBack();
       }
     },
   });
 
-  const handleConfirm = () => {
-    mutate(playlist._id);
-    setModalVisible(false);
+  const { data } = useQuery(
+    `plylist-${playlist._id}`,
+    () => getPlaylistById(playlist._id),
+    {
+      initialData: playlist,
+      enabled: me,
+    }
+  );
+
+  const handleConfirmPlaylist = () => {
+    playlistMutation.mutate(playlist._id);
+    setPlaylistModalVisible(false);
   };
 
   return (
@@ -58,7 +68,7 @@ export default function PlaylistScreen({
             ellipsizeMode="tail"
             numberOfLines={1}
           >
-            {playlist.title}
+            {data.title}
           </Text>
           <Text
             style={tw`text-lg font-bold text-black dark:text-white`}
@@ -68,7 +78,7 @@ export default function PlaylistScreen({
             ellipsizeMode="tail"
             numberOfLines={1}
           >
-            {playlist.owner.username}
+            {data.owner.username}
           </Text>
           <Text
             style={tw`text-lg font-bold text-black dark:text-white`}
@@ -76,7 +86,7 @@ export default function PlaylistScreen({
             numberOfLines={1}
           >{`Created at:`}</Text>
           <Text style={tw`text-base font-bold text-gry dark:text-grn`}>
-            {isoDateToDate(playlist.createdAt)}
+            {isoDateToDate(data.createdAt)}
           </Text>
         </View>
       </View>
@@ -86,18 +96,23 @@ export default function PlaylistScreen({
             <Button
               color="white"
               title="Delete"
-              onPress={() => setModalVisible(true)}
+              onPress={() => setPlaylistModalVisible(true)}
             />
           </View>
         )}
         <Text
           style={tw`text-lg font-bold text-black dark:text-white mt-2`}
         >{`Tracks:`}</Text>
-        {playlist.tracks?.length > 0 ? (
+        {data.tracks?.length > 0 ? (
           <FlatList
-            data={playlist.tracks}
+            data={data.tracks}
             renderItem={({ item }) => (
-              <TrackCell track={item} navigation={navigation} />
+              <TrackCell
+                track={item}
+                navigation={navigation}
+                me={me}
+                playlistId={playlist._id}
+              />
             )}
           />
         ) : (
@@ -107,12 +122,14 @@ export default function PlaylistScreen({
         )}
       </View>
       {me && (
-        <ConfirmAlert
-          onConfirm={handleConfirm}
-          message="Are you sure you want to delete this playlist?"
-          visible={modalVisible}
-          setModalVisible={setModalVisible}
-        />
+        <>
+          <ConfirmAlert
+            onConfirm={handleConfirmPlaylist}
+            message="Are you sure you want to delete this playlist?"
+            visible={playlistModalVisible}
+            setModalVisible={setPlaylistModalVisible}
+          />
+        </>
       )}
     </View>
   );

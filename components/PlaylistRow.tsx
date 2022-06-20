@@ -43,7 +43,7 @@ const PlaylistRow = (props: any) => {
           </Text>
         </View>
       </View>
-      <FontAwesome size={30} name="play" style={tw`text-grn m-2`} onPress={onClickPlaylist(props.playlist.tracks)}/>
+      <FontAwesome size={25} name="play" style={tw`text-grn m-2`} onPress={onClickPlaylist(props.playlist.tracks)}/>
     </TouchableOpacity>
   );
 };

@@ -80,8 +80,16 @@ export interface IPlaylist {
 }
 
 export interface IUpdatePayload {
-  id: string;
-  data: object;
+id: string;
+  data: {
+    action: PlaylistUpdateTaskAction;
+    trackId: string;
+  }
+}
+
+export enum PlaylistUpdateTaskAction {
+  Remove = "REMOVE",
+  Add = "ADD",
 }
 
 export interface IUpdatePlaylistdata {

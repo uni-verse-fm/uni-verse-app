@@ -52,7 +52,7 @@ const ReleaseRow = (props: any) => {
         </View>
       </View>
       <FontAwesome
-        size={30}
+        size={25}
         name="play"
         style={tw`text-grn m-2`}
         onPress={onClickRelease(props.release)}

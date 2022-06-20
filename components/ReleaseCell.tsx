@@ -31,7 +31,7 @@ const ReleaseCell = (props: any) => {
         >{`artist: ${props.release.author.username}`}</Text>
       </View>
       <View style={tw`flex flex-row items-center `}>
-        <FontAwesome name="play" style={tw`text-grn m-2`} />
+        <FontAwesome size={25} name="play" style={tw`text-grn m-2`} />
       </View>
     </TouchableOpacity>
   );

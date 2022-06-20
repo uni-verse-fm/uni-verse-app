@@ -36,7 +36,7 @@ const AddPlaylistForm = ({ cancel }) => {
       Alert.alert("Sorry can't create playlist, try later.");
     },
     onSettled: () => {
-      queryClient.invalidateQueries("todos");
+      queryClient.invalidateQueries("myPlaylists");
     },
     onSuccess: (res) => {
       if (res.status !== 201) {

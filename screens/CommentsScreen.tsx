@@ -125,7 +125,7 @@ const CommentsScreen = (props: ICommentsScreen) => {
         </TouchableOpacity>
         <View style={tw`flex-1 flex-col-reverse p-1 bg-white dark:bg-drk`}>
           <View
-            style={tw`flex flex-row items-center justify-between bg-white px-1 rounded-full mb-8`}
+            style={tw`flex flex-row items-center justify-between bg-white border-2 dark:border-0 px-1 rounded-full mb-8`}
           >
             <View style={tw`w-4/7`}>
               <TextInput

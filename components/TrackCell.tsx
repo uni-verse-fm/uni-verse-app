@@ -1,9 +1,10 @@
 import { FontAwesome } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { View, Text, Alert } from "react-native";
 import { useMutation, useQueryClient } from "react-query";
 import { updatePlaylist } from "../api/PlaylistAPI";
-import { PlaylistUpdateTaskAction } from "../constants/types";
+import { PlaylistUpdateTaskAction, Track, Types } from "../constants/types";
+import { PlayerContext } from "../context/PlayerContext";
 import CommentsScreen from "../screens/CommentsScreen";
 import tw from "../tailwind";
 import ConfirmAlert from "./ConfirmDialog";
@@ -12,9 +13,19 @@ const TrackCell = (props: any) => {
   const [showComments, setShowComments] = useState(false);
   const [trackModalVisible, setTrackModalVisible] = useState(false);
   const queryClient = useQueryClient();
+  const { dispatch } = useContext(PlayerContext);
 
   const onCloseComments = () => {
     setShowComments(false);
+  };
+
+  const onClickTrack = (track: Track) => () => {
+    dispatch({
+      type: Types.TrackPlay,
+      payload: {
+        track: track,
+      },
+    });
   };
 
   const trackMutation = useMutation(
@@ -75,7 +86,12 @@ const TrackCell = (props: any) => {
           style={tw`text-grn m-2`}
           onPress={() => setShowComments(true)}
         />
-        <FontAwesome size={25} name="play" style={tw`text-grn m-2`} />
+        <FontAwesome
+          size={25}
+          name="play"
+          style={tw`text-grn m-2`}
+          onPress={onClickTrack(props.track)}
+        />
       </View>
       <CommentsScreen
         visible={showComments}

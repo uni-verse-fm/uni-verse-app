@@ -20,7 +20,7 @@ const ReleaseCell = (props: any) => {
           release: getRelease.data,
         })
       }
-      style={tw`flex flex-row justify-between border-t border-grn items-center`}
+      style={tw`flex flex-row justify-between border-t border-grn border-opacity-20 items-center`}
     >
       <View>
         <Text style={tw`text-base font-bold dark:text-white`}>

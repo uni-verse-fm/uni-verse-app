@@ -1,15 +1,30 @@
 import { FontAwesome } from "@expo/vector-icons";
+import { useContext } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { useQuery } from "react-query";
 import { getReleaseById } from "../api/ReleaseAPI";
+import { Types } from "../constants/types";
+import { PlayerContext } from "../context/PlayerContext";
 import tw from "../tailwind";
 
 const ReleaseCell = (props: any) => {
+  const { dispatch } = useContext(PlayerContext);
+
   const getRelease = useQuery(
     "release",
     () => getReleaseById(props.release._id).then((res) => res.data),
     { enabled: Boolean(props.release._id) }
   );
+
+  const onClickRelease = (release: any) => () => {
+    dispatch({
+      type: Types.ReleasePlay,
+      payload: {
+        tracks: release.tracks || [],
+        trackIndex: 0,
+      },
+    });
+  };
 
   return (
     <TouchableOpacity
@@ -31,7 +46,12 @@ const ReleaseCell = (props: any) => {
         >{`artist: ${props.release.author.username}`}</Text>
       </View>
       <View style={tw`flex flex-row items-center `}>
-        <FontAwesome size={25} name="play" style={tw`text-grn m-2`} />
+        <FontAwesome
+          size={25}
+          name="play"
+          style={tw`text-grn m-2`}
+          onPress={onClickRelease(props.release)}
+        />
       </View>
     </TouchableOpacity>
   );

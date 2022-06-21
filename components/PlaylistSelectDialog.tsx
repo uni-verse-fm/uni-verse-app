@@ -11,12 +11,7 @@ import { useQuery } from "react-query";
 import { getUserPlaylists } from "../api/PlaylistAPI";
 import tw from "../tailwind";
 
-const PlaylistSelectDialog = ({
-  onConfirm,
-  visible,
-  setModalVisible,
-  meId,
-}) => {
+function PlaylistSelectDialog({ onConfirm, visible, setModalVisible, meId }) {
   const handleConfirm = (playlistId: string) => {
     setModalVisible(false);
     onConfirm(playlistId);
@@ -28,7 +23,7 @@ const PlaylistSelectDialog = ({
   return (
     <Modal
       animationType="fade"
-      transparent={true}
+      transparent
       visible={visible}
       onRequestClose={() => {
         setModalVisible(!visible);
@@ -40,7 +35,7 @@ const PlaylistSelectDialog = ({
             Choose one of your playlists
           </Text>
           {playlistQuery.status === "success" &&
-          (playlistQuery.data as any[]).length !== 0 ? (
+          (playlistQuery.data as []).length !== 0 ? (
             <FlatList
               data={playlistQuery.data}
               renderItem={({ item }) => (
@@ -74,6 +69,6 @@ const PlaylistSelectDialog = ({
       </View>
     </Modal>
   );
-};
+}
 
 export default PlaylistSelectDialog;

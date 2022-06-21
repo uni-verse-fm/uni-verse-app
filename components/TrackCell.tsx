@@ -10,7 +10,7 @@ import CommentsScreen from "../screens/CommentsScreen";
 import tw from "../tailwind";
 import ConfirmAlert from "./ConfirmDialog";
 
-const TrackCell = (props: any) => {
+function TrackCell(props: { playlistId: string; track: Track; me: unknown }) {
   const [showComments, setShowComments] = useState(false);
   const authContext = useContext(AuthContext);
   const [trackModalVisible, setTrackModalVisible] = useState(false);
@@ -25,7 +25,7 @@ const TrackCell = (props: any) => {
     dispatch({
       type: Types.TrackPlay,
       payload: {
-        track: track,
+        track,
       },
     });
   };
@@ -37,7 +37,7 @@ const TrackCell = (props: any) => {
       onError: () => {
         Alert.alert("Can't remove track now, try later.");
       },
-      onSuccess: async (res) => {
+      onSuccess: async (res: { status: number }) => {
         if (res.status !== 200) {
           Alert.alert("Can't remove track now, try later.");
         } else {
@@ -46,7 +46,7 @@ const TrackCell = (props: any) => {
           await queryClient.refetchQueries(`plylist-${props.playlistId}`);
         }
       },
-    }
+    },
   );
 
   const handleConfirmTrack = () => {
@@ -68,9 +68,9 @@ const TrackCell = (props: any) => {
         <Text style={tw`text-base font-bold dark:text-white`}>
           {props.track.title}
         </Text>
-        <Text
-          style={tw`font-bold text-gry dark:text-grn`}
-        >{`artist: ${props.track.author?.username}`}</Text>
+        <Text style={tw`font-bold text-gry dark:text-grn`}>
+          {`artist: ${props.track.author?.username}`}
+        </Text>
       </View>
       <View style={tw`flex flex-row items-center dark:text-white`}>
         {props.me && props.playlistId && (
@@ -112,6 +112,6 @@ const TrackCell = (props: any) => {
       )}
     </View>
   );
-};
+}
 
 export default TrackCell;

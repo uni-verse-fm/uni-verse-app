@@ -3,7 +3,7 @@ import { View, Text, Image } from "react-native";
 import tw from "../tailwind";
 import { isoDateToDate } from "../utils/dateTimeUtils";
 
-const CommentRow = ({ comment }) => {
+function CommentRow({ comment }) {
   return (
     <View
       style={tw`flex flex-row m-1 border-2 rounded-2xl ${
@@ -30,5 +30,5 @@ const CommentRow = ({ comment }) => {
       </View>
     </View>
   );
-};
+}
 export default CommentRow;

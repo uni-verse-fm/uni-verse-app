@@ -1,14 +1,17 @@
-import { View, Text } from "react-native";
+import { View, Text, Image, FlatList } from "react-native";
+import React from "react";
+import { useQuery } from "react-query";
 import tw from "../tailwind";
 import { RootTabScreenProps } from "../types";
-import { Image, FlatList } from "react-native";
-import React from "react";
 import ReleaseCell from "../components/ReleaseCell";
 import { getUserReleases } from "../api/ReleaseAPI";
-import { useQuery } from "react-query";
 
 interface IParams {
-  user: any;
+  user: {
+    id: string;
+    username: string;
+    email: string;
+  };
 }
 
 export default function UserScreen({
@@ -20,7 +23,7 @@ export default function UserScreen({
   const releaseQuery = useQuery(
     `user-releases-${user.id}`,
     () => getUserReleases(user.id as string),
-    { enabled: Boolean(user.id) }
+    { enabled: Boolean(user.id) },
   );
 
   return (
@@ -31,24 +34,24 @@ export default function UserScreen({
           source={require("../assets/images/profile.jpg")}
         />
         <View style={tw`flex mx-6 my-10`}>
-          <Text
-            style={tw`text-lg font-bold text-black dark:text-white`}
-          >{`Usename:`}</Text>
+          <Text style={tw`text-lg font-bold text-black dark:text-white`}>
+            Usename:
+          </Text>
           <Text style={tw`text-base font-bold text-gry dark:text-grn`}>
             {user.username}
           </Text>
-          <Text
-            style={tw`text-lg font-bold text-black dark:text-white`}
-          >{`Email:`}</Text>
+          <Text style={tw`text-lg font-bold text-black dark:text-white`}>
+            Email:
+          </Text>
           <Text style={tw`text-base font-bold text-gry dark:text-grn`}>
             {user.email}
           </Text>
         </View>
       </View>
       <View style={tw`mx-2`}>
-        <Text
-          style={tw`text-lg font-bold text-black mt-4 dark:text-white`}
-        >{`Releases:`}</Text>
+        <Text style={tw`text-lg font-bold text-black mt-4 dark:text-white`}>
+          Releases:
+        </Text>
         {releaseQuery.status === "success" && releaseQuery.data.length > 0 && (
           <FlatList
             data={releaseQuery.data}

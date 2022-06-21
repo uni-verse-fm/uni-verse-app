@@ -7,17 +7,17 @@ import {
   Alert,
 } from "react-native";
 import React, { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
 import * as SecureStore from "expo-secure-store";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import { AuthContext } from "../context/AuthContext";
 import { AxiosContext } from "../context/AxiosContext";
 import tw from "../tailwind";
 import { RootStackScreenProps } from "../types";
-import { Formik } from "formik";
 import { Messages } from "../constants/values";
-import * as Yup from "yup";
 import { ILogin } from "../constants/types";
 
-const LoginScreen = ({ navigation }: RootStackScreenProps<"Login">) => {
+function LoginScreen({ navigation }: RootStackScreenProps<"Login">) {
   const authContext = useContext(AuthContext);
   const { publicAxios } = useContext(AxiosContext);
 
@@ -37,7 +37,7 @@ const LoginScreen = ({ navigation }: RootStackScreenProps<"Login">) => {
 
       await SecureStore.setItemAsync("accessToken", accessToken);
       await SecureStore.setItemAsync("refreshToken", refreshToken);
-    } catch (error: any) {
+    } catch (error: unknown) {
       Alert.alert("Login Failed");
     }
   };
@@ -122,10 +122,10 @@ const LoginScreen = ({ navigation }: RootStackScreenProps<"Login">) => {
         style={tw`text-base font-bold text-grn`}
         onPress={() => navigation.navigate("Register")}
       >
-        Don't have an acount ?
+        Don&apos;t have an acount ?
       </Text>
     </SafeAreaView>
   );
-};
+}
 
 export default LoginScreen;

@@ -32,10 +32,10 @@ const getCommentById = (id: string) =>
 
 const getResourceComments = (resourceInfo: IResourceInfo) =>
   authAxios.get(
-    `${commentEndpoint}/${resourceInfo.typeOfContent}/${resourceInfo.contentId}`
+    `${commentEndpoint}/${resourceInfo.typeOfContent}/${resourceInfo.contentId}`,
   );
 
-const updateComment = (id: string, data: any) =>
+const updateComment = (id: string, data: unknown) =>
   publicAxios.put(`${commentEndpoint}/${id}`, JSON.stringify(data));
 
 const deleteComment = (id: string) =>

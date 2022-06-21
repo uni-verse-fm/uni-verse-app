@@ -4,16 +4,17 @@ import {
   FlatList,
   TextInput,
   TouchableHighlight,
+  View,
+  Text,
 } from "react-native";
 
+import { useQuery } from "react-query";
 import PlaylistRow from "../components/PlaylistRow";
 import ReleaseRow from "../components/ReleaseRow";
-import { View, Text } from "react-native";
 import TrackRow from "../components/TrackRow";
 import UserRow from "../components/UserRow";
 import tw from "../tailwind";
 import { RootTabScreenProps } from "../types";
-import { useQuery } from "react-query";
 import { searchTrack } from "../api/TrackAPI";
 import { searchRelease } from "../api/ReleaseAPI";
 import { searchPlaylist } from "../api/PlaylistAPI";
@@ -35,8 +36,8 @@ export default function SearchScreen({
 
   const [tab, setTab] = useState(Tab.Playlists);
 
-  const onClickTab = (tab: Tab) => {
-    setTab(tab);
+  const onClickTab = (clickedTab: Tab) => {
+    setTab(clickedTab);
   };
 
   const taskQuery = useQuery(
@@ -44,7 +45,7 @@ export default function SearchScreen({
     ({ signal }) => searchTrack(query, { signal }),
     {
       enabled: Boolean(query),
-    }
+    },
   );
 
   const releaseQuery = useQuery(
@@ -52,7 +53,7 @@ export default function SearchScreen({
     ({ signal }) => searchRelease(query, { signal }),
     {
       enabled: Boolean(query),
-    }
+    },
   );
 
   const playlistQuery = useQuery(
@@ -60,7 +61,7 @@ export default function SearchScreen({
     ({ signal }) => searchPlaylist(query, { signal }),
     {
       enabled: Boolean(query),
-    }
+    },
   );
 
   const userQuery = useQuery(
@@ -68,7 +69,7 @@ export default function SearchScreen({
     ({ signal }) => searchUsers(query, { signal }),
     {
       enabled: Boolean(query),
-    }
+    },
   );
 
   return (

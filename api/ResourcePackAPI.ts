@@ -11,7 +11,7 @@ const getResourcePackByTitle = (title: string) =>
 const getResourcePackById = (id: string) =>
   publicAxios.get(`${resourcePackEndpoint}/${id}`);
 
-const updateResourcePack = (id: string, data: any) =>
+const updateResourcePack = (id: string, data: unknown) =>
   publicAxios.put(`${resourcePackEndpoint}/${id}`, JSON.stringify(data));
 
 const deleteResourcePack = (id: string) =>

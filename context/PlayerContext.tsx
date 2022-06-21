@@ -67,7 +67,7 @@ export type PlayerActions =
 
 export const playerReducer = (
   state: ReducerPlayerType,
-  action: PlayerActions
+  action: PlayerActions,
 ) => {
   switch (action.type) {
     case Types.PlaylistPlay:
@@ -113,7 +113,7 @@ const PlayerProvider: React.FC = ({ children }) => {
   const [sound, setSound] = useState<Audio.Sound>();
 
   const [currentTrackIndex, setCurrentTrackIndex] = useState<number>(
-    state.trackIndex || 0
+    state.trackIndex || 0,
   );
 
   const unload = () => false;
@@ -121,7 +121,7 @@ const PlayerProvider: React.FC = ({ children }) => {
     state.tracks ? currentTrackIndex + 1 < state.tracks?.length : false;
   const hasPrevious = () => (state.tracks ? currentTrackIndex - 1 >= 0 : false);
 
-  const nextTrack = async (loop: boolean = false) => {
+  const nextTrack = async (loop = false) => {
     if (currentTrackIndex + 1 < state.tracks?.length && sound) {
       const newUrl = trackSource + state.tracks[currentTrackIndex + 1].fileName;
       setCurrentTrackIndex(currentTrackIndex + 1);
@@ -137,9 +137,9 @@ const PlayerProvider: React.FC = ({ children }) => {
                   (await sound
                     .playAsync()
                     .then(() => setPlaying(true))
-                    .catch(() => setPlaying(false)))
+                    .catch(() => setPlaying(false))),
               )
-              .catch(() => setPlaying(false))
+              .catch(() => setPlaying(false)),
         )
         .catch(() => setPlaying(false));
     } else if (loop && sound) {
@@ -156,9 +156,9 @@ const PlayerProvider: React.FC = ({ children }) => {
                   await sound
                     .playAsync()
                     .then(() => setPlaying(true))
-                    .catch(() => setPlaying(false))
+                    .catch(() => setPlaying(false)),
               )
-              .catch(() => setPlaying(false))
+              .catch(() => setPlaying(false)),
         )
         .catch(() => setPlaying(false));
     } else {
@@ -191,14 +191,14 @@ const PlayerProvider: React.FC = ({ children }) => {
           } else if (
             status.isLoaded &&
             Math.floor((status.durationMillis || 0) / 100) ===
-            Math.floor(status.positionMillis / 100) &&
+              Math.floor(status.positionMillis / 100) &&
             !hasNext()
           ) {
             await nextTrack(true);
           } else if (
             status.isLoaded &&
             Math.floor((status.durationMillis || 0) / 100) ===
-            Math.floor(status.positionMillis / 100) &&
+              Math.floor(status.positionMillis / 100) &&
             hasNext()
           ) {
             await nextTrack();
@@ -209,37 +209,39 @@ const PlayerProvider: React.FC = ({ children }) => {
         .catch(() => setPlaying(false)));
   };
 
-  useEffect(() => {
-    return sound
-      ? () => {
-          sound.unloadAsync();
-        }
-      : undefined;
-  }, [sound]);
+  useEffect(
+    () =>
+      sound
+        ? () => {
+            sound.unloadAsync();
+          }
+        : undefined,
+    [sound],
+  );
 
-  const onTracksChange = async (newTracks: any) => {
+  const onTracksChange = async (newTracks: Array<{ fileName: string }>) => {
     const newUrl = trackSource + newTracks[currentTrackIndex].fileName;
 
-    await Audio.setAudioModeAsync({ 
-        staysActiveInBackground: true,
-        interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
-        playThroughEarpieceAndroid: true,
-        interruptionModeIOS: InterruptionModeIOS.DoNotMix,
-        playsInSilentModeIOS: true,
+    await Audio.setAudioModeAsync({
+      staysActiveInBackground: true,
+      interruptionModeAndroid: InterruptionModeAndroid.DoNotMix,
+      playThroughEarpieceAndroid: true,
+      interruptionModeIOS: InterruptionModeIOS.DoNotMix,
+      playsInSilentModeIOS: true,
     });
 
-    const sound = new Audio.Sound();
+    const m_sound = new Audio.Sound();
 
-    sound.setOnPlaybackStatusUpdate((status) => {
+    m_sound.setOnPlaybackStatusUpdate((status) => {
       if (status.isLoaded) {
         setPosition(status.positionMillis);
         setDuration(status.durationMillis || 0);
       }
     });
-    await sound.loadAsync({ uri: newUrl });
+    await m_sound.loadAsync({ uri: newUrl });
 
-    setSound(sound);
-    await sound
+    setSound(m_sound);
+    await m_sound
       ?.playAsync()
       .then(() => setPlaying(true))
       .catch(() => setPlaying(false));
@@ -254,6 +256,7 @@ const PlayerProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     state.tracks?.length && onTracksChange(state.tracks);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.tracks]);
 
   return (

@@ -1,7 +1,11 @@
+import React from "react";
 import { View, Image, Text, TouchableOpacity } from "react-native";
 import tw from "../tailwind";
 
-const UserRow = (props: any) => {
+function UserRow(props: {
+  user: { username: string; email: string };
+  navigation: { navigate: (string, unknown) => void };
+}) {
   return (
     <TouchableOpacity
       key={props.user.username}
@@ -17,11 +21,15 @@ const UserRow = (props: any) => {
         source={require("../assets/images/profile.jpg")}
       />
       <View style={tw`flex`}>
-        <Text style={tw`text-lg font-bold dark:text-white`}>{props.user.username}</Text>
-        <Text style={tw`text-gry font-bold dark:text-grn`}>{props.user.email}</Text>
+        <Text style={tw`text-lg font-bold dark:text-white`}>
+          {props.user.username}
+        </Text>
+        <Text style={tw`text-gry font-bold dark:text-grn`}>
+          {props.user.email}
+        </Text>
       </View>
     </TouchableOpacity>
   );
-};
+}
 
 export default UserRow;

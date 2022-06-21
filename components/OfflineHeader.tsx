@@ -3,7 +3,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import tw from "../tailwind";
 
-const OfflineHeader = () => {
+function OfflineHeader() {
   const netInfo = useNetInfo();
 
   return netInfo.isConnected ? (
@@ -15,6 +15,6 @@ const OfflineHeader = () => {
       </Text>
     </View>
   );
-};
+}
 
 export default OfflineHeader;

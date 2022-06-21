@@ -7,15 +7,15 @@ import {
   Alert,
 } from "react-native";
 import React from "react";
-import tw from "../tailwind";
-import { RootStackScreenProps } from "../types";
 import { Formik } from "formik";
 import * as Yup from "yup";
+import { useMutation } from "react-query";
+import tw from "../tailwind";
+import { RootStackScreenProps } from "../types";
 import { Messages } from "../constants/values";
 import { register } from "../api/AuthAPI";
-import { useMutation } from "react-query";
 
-const ReleaseScreen = ({ navigation }: RootStackScreenProps<"Register">) => {
+function ReleaseScreen({ navigation }: RootStackScreenProps<"Register">) {
   const { mutate } = useMutation("register", register, {
     onSuccess: (res) => {
       if (res.status === 201) {
@@ -53,7 +53,7 @@ const ReleaseScreen = ({ navigation }: RootStackScreenProps<"Register">) => {
             .min(8, Messages.SHORT_PASWORD),
           passwordConfirmation: Yup.string().oneOf(
             [Yup.ref("password"), null],
-            Messages.PASSWORD_MISMATCH
+            Messages.PASSWORD_MISMATCH,
           ),
         })}
         onSubmit={(value) => {
@@ -153,6 +153,6 @@ const ReleaseScreen = ({ navigation }: RootStackScreenProps<"Register">) => {
       </Formik>
     </SafeAreaView>
   );
-};
+}
 
 export default ReleaseScreen;

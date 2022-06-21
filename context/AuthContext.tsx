@@ -15,7 +15,7 @@ type InitialStateType = {
 
 const AuthContext = createContext<InitialStateType>({} as InitialStateType);
 
-const AuthProvider = (props: any) => {
+function AuthProvider(props: { children: React.ReactNode }) {
   const [authState, setAuthState] = useState<AuthStateType>();
   const isCancelled = useRef(false);
 
@@ -30,15 +30,14 @@ const AuthProvider = (props: any) => {
     });
   };
 
-  React.useEffect(() => {
-    return () => {
+  React.useEffect(
+    () => () => {
       isCancelled.current = true;
-    };
-  }, []);
+    },
+    [],
+  );
 
-  const getAccessToken = () => {
-    return authState?.accessToken;
-  };
+  const getAccessToken = () => authState?.accessToken;
 
   return (
     <AuthContext.Provider
@@ -52,6 +51,6 @@ const AuthProvider = (props: any) => {
       {props.children}
     </AuthContext.Provider>
   );
-};
+}
 
 export { AuthContext, AuthProvider };

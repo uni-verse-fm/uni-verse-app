@@ -1,8 +1,6 @@
 name: release-apk
 on:
-  push:
-    branches:
-      - master
+  release:
 jobs:
   install-and-test:
     runs-on: ubuntu-latest

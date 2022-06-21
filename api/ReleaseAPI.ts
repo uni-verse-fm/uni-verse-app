@@ -11,16 +11,16 @@ const getReleaseByTitle = (title: string) =>
 const getReleaseById = (id: string) =>
   authAxios.get(`${releaseEndpoint}/${id}`);
 
-const updateRelease = (id: string, data: any) =>
+const updateRelease = (id: string, data: unknown) =>
   publicAxios.put(`${releaseEndpoint}/${id}`, JSON.stringify(data));
 
-const deleteRelease = (id: String) =>
+const deleteRelease = (id: string) =>
   publicAxios.delete(`${releaseEndpoint}/${id}`);
 
 const getUserReleases = (id: string) =>
   publicAxios.get(`${releaseEndpoint}/user/${id}`).then((res) => res.data);
 
-const searchRelease = (text: string, { signal }: any) =>
+const searchRelease = (text: string, { signal }: { signal: unknown }) =>
   publicAxios
     .get(`${releaseEndpoint}/search?search=${text}`, {
       signal,

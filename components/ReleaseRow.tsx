@@ -14,10 +14,19 @@ export interface IReleaseRow {
   image: string;
 }
 
-const ReleaseRow = (props: any) => {
+function ReleaseRow(props: {
+  release: {
+    _id: string;
+    author: { username: string };
+    title: string;
+    tracks: [];
+    coverName: string;
+  };
+  navigation: { navigate: (string, unknown) => void };
+}) {
   const { dispatch } = useContext(PlayerContext);
 
-  const onClickRelease = (release: any) => () => {
+  const onClickRelease = (release: { tracks: [] }) => () => {
     dispatch({
       type: Types.ReleasePlay,
       payload: {
@@ -40,7 +49,11 @@ const ReleaseRow = (props: any) => {
       <View style={tw`flex flex-row m-1`}>
         <Image
           style={tw`h-10 w-10 rounded-full m-1`}
-          source={props.release.coverName ? { uri: imageSource + props.release.coverName } : require("../assets/images/playlist.png")}
+          source={
+            props.release.coverName
+              ? { uri: imageSource + props.release.coverName }
+              : require("../assets/images/playlist.png")
+          }
         />
         <View style={tw`flex`}>
           <Text style={tw`text-lg font-bold dark:text-white`}>
@@ -59,6 +72,6 @@ const ReleaseRow = (props: any) => {
       />
     </TouchableOpacity>
   );
-};
+}
 
 export default ReleaseRow;

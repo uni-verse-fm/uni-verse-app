@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, View, Button, Text } from "react-native";
 import tw from "../tailwind";
 
-const ConfirmAlert = ({ onConfirm, visible, setModalVisible, message }) => {
+function ConfirmAlert({ onConfirm, visible, setModalVisible, message }) {
   const handleConfirm = () => {
     setModalVisible(false);
     onConfirm();
@@ -11,7 +11,7 @@ const ConfirmAlert = ({ onConfirm, visible, setModalVisible, message }) => {
   return (
     <Modal
       animationType="fade"
-      transparent={true}
+      transparent
       visible={visible}
       onRequestClose={() => {
         setModalVisible(!visible);
@@ -36,6 +36,6 @@ const ConfirmAlert = ({ onConfirm, visible, setModalVisible, message }) => {
       </View>
     </Modal>
   );
-};
+}
 
 export default ConfirmAlert;

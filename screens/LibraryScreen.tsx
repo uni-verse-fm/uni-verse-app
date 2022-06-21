@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import {
   Alert,
-  Button,
   FlatList,
   TouchableHighlight,
   TouchableOpacity,
+  View,
+  Text,
 } from "react-native";
+import { useQuery } from "react-query";
 import PlaylistRow from "../components/PlaylistRow";
 import ReleaseRow from "../components/ReleaseRow";
-import { View, Text } from "react-native";
 
 import tw from "../tailwind";
 import { RootTabScreenProps } from "../types";
-import { useQuery } from "react-query";
 import { me } from "../api/AuthAPI";
 import { getUserReleases } from "../api/ReleaseAPI";
 import { getUserPlaylists } from "../api/PlaylistAPI";
@@ -42,17 +42,17 @@ export default function LibraryScreen({
   const releaseQuery = useQuery(
     "myReleases",
     () => getUserReleases(meQuery.data.id as string),
-    { enabled: meQuery.status === "success" }
+    { enabled: meQuery.status === "success" },
   );
 
   const playlistQuery = useQuery(
     "myPlaylists",
     () => getUserPlaylists(meQuery.data.id as string),
-    { enabled: meQuery.status === "success" }
+    { enabled: meQuery.status === "success" },
   );
 
-  const onClickTab = (tab: Tab) => {
-    setTab(tab);
+  const onClickTab = (clickedTab: Tab) => {
+    setTab(clickedTab);
   };
 
   return (
@@ -101,7 +101,10 @@ export default function LibraryScreen({
             {addOpen ? (
               <AddPlaylistForm cancel={toggleAddOpen} />
             ) : (
-              <TouchableOpacity style={tw`bg-grn m-1 rounded-lg`} onPress={toggleAddOpen}>
+              <TouchableOpacity
+                style={tw`bg-grn m-1 rounded-lg`}
+                onPress={toggleAddOpen}
+              >
                 <Text style={tw`text-base text-drk font-bold text-center`}>
                   Add playlist
                 </Text>

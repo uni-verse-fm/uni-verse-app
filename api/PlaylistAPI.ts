@@ -6,12 +6,12 @@ const playlistEndpoint = Endoints.Playlists;
 const getPlaylists = () => publicAxios.get(playlistEndpoint);
 
 const getUserPlaylists = (id: string) =>
-authAxios.get(`${playlistEndpoint}/user/${id}`).then((res) => res.data);
-
-const getUserPlaylistsAuth = (id: string) =>
   authAxios.get(`${playlistEndpoint}/user/${id}`).then((res) => res.data);
 
-const createPlaylist = (data: any) =>
+// const getUserPlaylistsAuth = (id: string) =>
+//   authAxios.get(`${playlistEndpoint}/user/${id}`).then((res) => res.data);
+
+const createPlaylist = (data: unknown) =>
   authAxios.post(`${playlistEndpoint}`, data);
 
 const getPlaylistByTitle = (title: string) =>
@@ -23,10 +23,10 @@ const getPlaylistById = (id: string) =>
 const updatePlaylist = (param: IUpdatePayload) =>
   authAxios.patch(`${playlistEndpoint}/${param.id}`, param.data);
 
-const deletePlaylist = (id: String) =>
+const deletePlaylist = (id: string) =>
   authAxios.delete(`${playlistEndpoint}/${id}`);
 
-const searchPlaylist = (text: string, { signal }: any) =>
+const searchPlaylist = (text: string, { signal }: { signal }) =>
   publicAxios
     .get(`${playlistEndpoint}/search?search=${text}`, {
       signal,

@@ -1,5 +1,5 @@
-import { baseURL } from './../context/AxiosContext';
 import axios from "axios";
+import { baseURL } from "../context/AxiosContext";
 
 const headers = {
   "Access-Control-Allow-Credentials": true,
@@ -10,7 +10,7 @@ const headers = {
 };
 
 const axiosClient = axios.create({
-  baseURL: baseURL,
+  baseURL,
   headers: { ...headers },
   withCredentials: true,
 });

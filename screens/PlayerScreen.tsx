@@ -11,7 +11,7 @@ interface IPlayerScrenn {
   visible: boolean;
 }
 
-const PlayerScreen = (props: IPlayerScrenn) => {
+function PlayerScreen(props: IPlayerScrenn) {
   const { state } = useContext(PlayerContext);
 
   return (
@@ -58,7 +58,7 @@ const PlayerScreen = (props: IPlayerScrenn) => {
                   minimumValue={0}
                   maximumValue={state.playerState?.duration || 0}
                   step={1}
-                  trackClickable={true}
+                  trackClickable
                   onSlidingComplete={(value) =>
                     state.onSlide((value as number[])[0] as number)
                   }
@@ -124,5 +124,5 @@ const PlayerScreen = (props: IPlayerScrenn) => {
       </View>
     </Modal>
   );
-};
+}
 export default PlayerScreen;

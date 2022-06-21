@@ -1,16 +1,18 @@
-import { View, Text, Button, Alert } from "react-native";
+import { View, Text, Button, Alert, Image, FlatList } from "react-native";
+import React, { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import tw from "../tailwind";
 import { RootStackScreenProps } from "../types";
-import { Image, FlatList } from "react-native";
-import React, { useState } from "react";
 import TrackCell from "../components/TrackCell";
 import { isoDateToDate } from "../utils/dateTimeUtils";
 import ConfirmAlert from "../components/ConfirmDialog";
-import { useMutation, useQuery, useQueryClient } from "react-query";
 import { deletePlaylist, getPlaylistById } from "../api/PlaylistAPI";
 
 interface IParams {
-  playlist: any;
+  playlist: {
+    _id: string;
+    title: string;
+  };
   me?: boolean;
 }
 
@@ -44,7 +46,7 @@ export default function PlaylistScreen({
     {
       initialData: playlist,
       enabled: me,
-    }
+    },
   );
 
   const handleConfirmPlaylist = () => {
@@ -60,9 +62,9 @@ export default function PlaylistScreen({
           source={require("../assets/images/playlist.png")}
         />
         <View style={tw`flex m-6`}>
-          <Text
-            style={tw`text-lg font-bold text-black dark:text-white`}
-          >{`Title:`}</Text>
+          <Text style={tw`text-lg font-bold text-black dark:text-white`}>
+            Title:
+          </Text>
           <Text
             style={tw`text-base font-bold text-gry dark:text-grn`}
             ellipsizeMode="tail"
@@ -70,9 +72,9 @@ export default function PlaylistScreen({
           >
             {data.title}
           </Text>
-          <Text
-            style={tw`text-lg font-bold text-black dark:text-white`}
-          >{`Owner:`}</Text>
+          <Text style={tw`text-lg font-bold text-black dark:text-white`}>
+            Owner:
+          </Text>
           <Text
             style={tw`text-base font-bold text-gry dark:text-grn`}
             ellipsizeMode="tail"
@@ -84,7 +86,9 @@ export default function PlaylistScreen({
             style={tw`text-lg font-bold text-black dark:text-white`}
             ellipsizeMode="tail"
             numberOfLines={1}
-          >{`Created at:`}</Text>
+          >
+            Created at:
+          </Text>
           <Text style={tw`text-base font-bold text-gry dark:text-grn`}>
             {isoDateToDate(data.createdAt)}
           </Text>
@@ -100,9 +104,9 @@ export default function PlaylistScreen({
             />
           </View>
         )}
-        <Text
-          style={tw`text-lg font-bold text-black dark:text-white mt-2`}
-        >{`Tracks:`}</Text>
+        <Text style={tw`text-lg font-bold text-black dark:text-white mt-2`}>
+          Tracks:
+        </Text>
         {data.tracks?.length > 0 ? (
           <FlatList
             data={data.tracks}
@@ -122,14 +126,12 @@ export default function PlaylistScreen({
         )}
       </View>
       {me && (
-        <>
-          <ConfirmAlert
-            onConfirm={handleConfirmPlaylist}
-            message="Are you sure you want to delete this playlist?"
-            visible={playlistModalVisible}
-            setModalVisible={setPlaylistModalVisible}
-          />
-        </>
+        <ConfirmAlert
+          onConfirm={handleConfirmPlaylist}
+          message="Are you sure you want to delete this playlist?"
+          visible={playlistModalVisible}
+          setModalVisible={setPlaylistModalVisible}
+        />
       )}
     </View>
   );

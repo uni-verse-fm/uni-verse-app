@@ -5,10 +5,13 @@ import { Types } from "../constants/types";
 import { PlayerContext } from "../context/PlayerContext";
 import tw from "../tailwind";
 
-const PlaylistRow = (props: any) => {
+function PlaylistRow(props: {
+  playlist: { title: string; owner: { username: string }; tracks: [] };
+  navigation: { navigate: (string, unknown) => void };
+}) {
   const { dispatch } = useContext(PlayerContext);
 
-  const onClickPlaylist = (playlist: any) => () => {
+  const onClickPlaylist = (playlist: { tracks: [] }) => () => {
     dispatch({
       type: Types.PlaylistPlay,
       payload: {
@@ -51,6 +54,6 @@ const PlaylistRow = (props: any) => {
       />
     </TouchableOpacity>
   );
-};
+}
 
 export default PlaylistRow;

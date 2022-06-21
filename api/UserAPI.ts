@@ -10,15 +10,14 @@ const getUserByUsername = (username: string) =>
 
 const getUserById = (id: string) => publicAxios.get(`${userEndpoint}/${id}`);
 
-const updateUser = (id: string, data: any) =>
+const updateUser = (id: string, data: unknown) =>
   publicAxios.put(`${userEndpoint}/${id}`, JSON.stringify(data));
 
-const deleteUser = () =>
-  authAxios.delete(`${userEndpoint}`);
+const deleteUser = () => authAxios.delete(`${userEndpoint}`);
 
 const onboardUser = () => publicAxios.post(`${userEndpoint}/onboard`);
 
-const searchUsers = (text: string, { signal }: any) =>
+const searchUsers = (text: string, { signal }: { signal: unknown }) =>
   authAxios
     .get(`${userEndpoint}/search?search=${text}`, {
       signal,

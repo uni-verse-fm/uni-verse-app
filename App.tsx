@@ -1,16 +1,16 @@
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+import { useAppColorScheme, useDeviceContext } from "twrnc";
+import React, { useCallback, useContext, useEffect, useState } from "react";
+import * as SecureStore from "expo-secure-store";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { NavigationState } from "@react-navigation/native";
 import Navigation, { getCurrentRoute } from "./navigation";
 import FloatingMenu from "./components/FloatingMenu";
 import tw from "./tailwind";
-import { useAppColorScheme, useDeviceContext } from "twrnc";
-import React, { useCallback, useContext, useEffect, useState } from "react";
 import { AuthContext } from "./context/AuthContext";
-import * as SecureStore from "expo-secure-store";
 import Spinner from "./components/Spinner";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { NavigationState } from "@react-navigation/native";
 import { PlayerProvider } from "./context/PlayerContext";
 import PlayerScreen from "./screens/PlayerScreen";
 
@@ -59,7 +59,7 @@ export default function App() {
         authenticated: false,
       });
     }
-  }, []);
+  }, [authContext]);
 
   useEffect(() => {
     loadJWT();

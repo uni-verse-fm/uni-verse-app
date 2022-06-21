@@ -1,11 +1,10 @@
-import { View, Text, Alert, Button, ScrollView } from "react-native";
+import { View, Text, Alert, Button, ScrollView, Image } from "react-native";
+import React, { useContext, useState } from "react";
+import { useQuery, useMutation } from "react-query";
 import tw from "../tailwind";
 import { RootStackScreenProps } from "../types";
-import { Image } from "react-native";
-import React, { useContext, useState } from "react";
 import ReleaseCell from "../components/ReleaseCell";
 import { me } from "../api/AuthAPI";
-import { useQuery, useMutation, useQueryClient } from "react-query";
 import { getUserReleases } from "../api/ReleaseAPI";
 import { getUserPlaylists } from "../api/PlaylistAPI";
 import ConfirmAlert from "../components/ConfirmDialog";
@@ -51,13 +50,13 @@ export default function MyProfileScreen({
   const releaseQuery = useQuery(
     "myReleases",
     () => getUserReleases(meQuery.data.id as string),
-    { enabled: meQuery.status === "success" }
+    { enabled: meQuery.status === "success" },
   );
 
   const playlistQuery = useQuery(
     "myPlaylists",
     () => getUserPlaylists(meQuery.data.id as string),
-    { enabled: meQuery.status === "success" }
+    { enabled: meQuery.status === "success" },
   );
 
   return (
@@ -68,19 +67,19 @@ export default function MyProfileScreen({
           source={require("../assets/images/profile.jpg")}
         />
         <View style={tw`flex my-5 p-2 w-1/2`}>
-          <Text
-            style={tw`text-lg font-bold text-black dark:text-white`}
-          >{`Usename:`}</Text>
+          <Text style={tw`text-lg font-bold text-black dark:text-white`}>
+            Usename:
+          </Text>
           <Text
             style={tw`text-base font-bold text-gry dark:text-grn`}
             ellipsizeMode="tail"
             numberOfLines={1}
-          >{`${
-            meQuery.status === "success" ? meQuery.data.username : ""
-          }`}</Text>
-          <Text
-            style={tw`text-lg font-bold text-black dark:text-white`}
-          >{`Email:`}</Text>
+          >
+            {`${meQuery.status === "success" ? meQuery.data.username : ""}`}
+          </Text>
+          <Text style={tw`text-lg font-bold text-black dark:text-white`}>
+            Email:
+          </Text>
           <Text
             style={tw`text-base font-bold text-gry dark:text-grn`}
             ellipsizeMode="tail"
@@ -98,9 +97,9 @@ export default function MyProfileScreen({
             onPress={() => setModalVisible(true)}
           />
         </View>
-        <Text
-          style={tw`text-lg font-bold text-black mt-4 dark:text-white`}
-        >{`Releases:`}</Text>
+        <Text style={tw`text-lg font-bold text-black mt-4 dark:text-white`}>
+          Releases:
+        </Text>
         {releaseQuery.status === "success" &&
           releaseQuery.data.map((item, index) => (
             <ReleaseCell
@@ -114,9 +113,9 @@ export default function MyProfileScreen({
           ))}
       </View>
       <View style={tw`mx-2`}>
-        <Text
-          style={tw`text-lg font-bold text-black mt-4 dark:text-white`}
-        >{`Playlists:`}</Text>
+        <Text style={tw`text-lg font-bold text-black mt-4 dark:text-white`}>
+          Playlists:
+        </Text>
         {playlistQuery.status === "success" &&
           playlistQuery.data.map((item, index) => (
             <ReleaseCell

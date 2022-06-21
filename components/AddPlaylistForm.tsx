@@ -9,12 +9,12 @@ import {
   Button,
 } from "react-native";
 import { useMutation, useQueryClient } from "react-query";
+import * as Yup from "yup";
 import { createPlaylist } from "../api/PlaylistAPI";
 import { Messages } from "../constants/values";
 import tw from "../tailwind";
-import * as Yup from "yup";
 
-const AddPlaylistForm = ({ cancel }) => {
+function AddPlaylistForm({ cancel }) {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation("createPlaylist", createPlaylist, {
@@ -23,7 +23,7 @@ const AddPlaylistForm = ({ cancel }) => {
 
       const previousPlaylists = queryClient.getQueryData("myPlaylists");
 
-      queryClient.setQueryData("myPlaylists", (old: any[]) => [
+      queryClient.setQueryData("myPlaylists", (old: unknown[]) => [
         ...old,
         newTodo,
       ]);
@@ -97,6 +97,6 @@ const AddPlaylistForm = ({ cancel }) => {
       )}
     </Formik>
   );
-};
+}
 
 export default AddPlaylistForm;

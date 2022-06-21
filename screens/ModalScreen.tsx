@@ -1,8 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useContext } from "react";
-import { Platform, Image, TouchableOpacity } from "react-native";
+import { Platform, Image, TouchableOpacity, View, Text } from "react-native";
 
-import { View, Text } from "react-native";
 import { AuthContext } from "../context/AuthContext";
 
 import tw from "../tailwind";
@@ -61,7 +60,9 @@ export default function ModalScreen({
                   navigation.navigate("Login");
                 }}
               >
-                <Text style={tw`text-xl font-bold text-white text-center`}>Login</Text>
+                <Text style={tw`text-xl font-bold text-white text-center`}>
+                  Login
+                </Text>
               </TouchableOpacity>
             </View>
             <View style={tw`bg-gry px-3 py-1 rounded-full m-1`}>
@@ -71,7 +72,9 @@ export default function ModalScreen({
                   navigation.navigate("Register");
                 }}
               >
-                <Text style={tw`text-xl font-bold text-white text-center`}>Register</Text>
+                <Text style={tw`text-xl font-bold text-white text-center`}>
+                  Register
+                </Text>
               </TouchableOpacity>
             </View>
           </View>

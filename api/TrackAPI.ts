@@ -4,8 +4,8 @@ import { publicAxios } from "../context/AxiosContext";
 const trackEndpoint = Endoints.Tracks;
 const getTrackById = (id: string) => publicAxios.get(`${trackEndpoint}/${id}`);
 
-const searchTrack = (text: string, { signal }: any) =>
-publicAxios
+const searchTrack = (text: string, { signal }: { signal: unknown }) =>
+  publicAxios
     .get(`${trackEndpoint}/search?search=${text}`, {
       signal,
     })

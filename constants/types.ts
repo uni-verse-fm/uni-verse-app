@@ -68,7 +68,7 @@ export interface UniVerseError {
 export interface ICreateResource {
   title: string;
   description: string;
-  image: any;
+  image: unknown;
   feats?: string[];
   resources: IResource[];
   accessType: AccessType;
@@ -80,11 +80,11 @@ export interface IPlaylist {
 }
 
 export interface IUpdatePayload {
-id: string;
+  id: string;
   data: {
     action: PlaylistUpdateTaskAction;
     trackId: string;
-  }
+  };
 }
 
 export enum PlaylistUpdateTaskAction {
@@ -98,8 +98,8 @@ export interface IUpdatePlaylistdata {
 
 export interface SideMenuEntryProps {
   title: string;
-  icon: any;
-  onClick?: (event: any) => void;
+  icon: unknown;
+  onClick?: (event: unknown) => void;
   pageName?: Pages;
   nbNotif?: number;
 }
@@ -118,17 +118,17 @@ export interface IProfileScreen {
     accountId?: string;
     image?: string;
   };
-  releases: any;
+  releases: unknown[];
   isMe?: boolean;
 }
 
 export type IReaderTimeLine = {
   duration: number;
   playerTime: number;
-  onSlide: (value: number) => any;
+  onSlide: (value: number) => unknown;
 };
 
-export type Track = { fileName: string; author: any; id?: string } & ITrack;
+export type Track = { fileName: string; author: unknown; id?: string } & ITrack;
 
 export const enum SourceType {
   Playlist,
@@ -155,7 +155,7 @@ export interface ILogin {
 }
 
 export interface ILoginForm {
-  signIn: any;
+  signIn: unknown;
 }
 
 export interface IPlaylist {
@@ -191,7 +191,7 @@ export enum Endoints {
   Tracks = "/tracks",
 }
 
-export type ActionMap<M extends { [index: string]: any }> = {
+export type ActionMap<M extends { [index: string]: unknown }> = {
   [Key in keyof M]: M[Key] extends undefined
     ? {
         type: Key;

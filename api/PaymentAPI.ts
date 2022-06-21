@@ -21,9 +21,9 @@ export interface IAddCard {
 }
 
 const donate = (data: IDonate) =>
-publicAxios.post(`${authEndpoint}/donate`, data);
+  publicAxios.post(`${authEndpoint}/donate`, data);
 const purchase = (data: IPurchase) =>
-publicAxios.post(`${authEndpoint}/charge`, data);
+  publicAxios.post(`${authEndpoint}/charge`, data);
 const accountDetails = () => publicAxios.get(`${authEndpoint}/account/me`);
 
 export { donate, purchase, accountDetails };

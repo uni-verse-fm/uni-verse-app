@@ -11,7 +11,17 @@ import CommentsScreen from "../screens/CommentsScreen";
 import tw from "../tailwind";
 import PlaylistSelectDialog from "./PlaylistSelectDialog";
 
-const TrackRow = (props: any) => {
+function TrackRow(props: {
+  track: {
+    author: { username: string };
+    fileName: string;
+    release: { title: string };
+    _id: string;
+    title: string;
+    file: File;
+    feats: [];
+  };
+}) {
   const { dispatch } = useContext(PlayerContext);
   const [showComments, setShowComments] = useState(false);
   const authContext = useContext(AuthContext);
@@ -26,26 +36,30 @@ const TrackRow = (props: any) => {
     dispatch({
       type: Types.TrackPlay,
       payload: {
-        track: track,
+        track,
       },
     });
   };
 
   const meQuery = useQuery("me", () => me().then((res) => res.data));
 
-  const { mutate } = useMutation(`add-track-${props.track._id}-playlist`, updatePlaylist, {
-    onError: () => {
-      Alert.alert("Can't add track now, try later.");
-    },
-    onSuccess: async (res) => {
-      if (res.status !== 200) {
+  const { mutate } = useMutation(
+    `add-track-${props.track._id}-playlist`,
+    updatePlaylist,
+    {
+      onError: () => {
         Alert.alert("Can't add track now, try later.");
-      } else {
-        Alert.alert("Track was added");
-        await queryClient.refetchQueries("myPlaylists");
-      }
+      },
+      onSuccess: async (res: { status: number }) => {
+        if (res.status !== 200) {
+          Alert.alert("Can't add track now, try later.");
+        } else {
+          Alert.alert("Track was added");
+          await queryClient.refetchQueries("myPlaylists");
+        }
+      },
     },
-  });
+  );
 
   const handleConfirm = (playlistId: string) => {
     meQuery.data?._id &&
@@ -73,15 +87,20 @@ const TrackRow = (props: any) => {
           <Text style={tw`text-gry font-bold dark:text-grn`}>
             {props.track.author.username}
           </Text>
-          <Text
-            style={tw`text-gry font-bold dark:text-grn`}
-          >{`Release: ${props.track.release.title}`}</Text>
+          <Text style={tw`text-gry font-bold dark:text-grn`}>
+            {`Release: ${props.track.release.title}`}
+          </Text>
         </View>
       </View>
       <View style={tw`flex flex-row`}>
         <View style={tw`flex flex-row items-center dark:text-white`}>
           {meQuery.data?._id && (
-            <FontAwesome size={25} name="plus" style={tw`text-grn m-2`} onPress={() => setModalVisible(true)} />
+            <FontAwesome
+              size={25}
+              name="plus"
+              style={tw`text-grn m-2`}
+              onPress={() => setModalVisible(true)}
+            />
           )}
           <FontAwesome
             size={25}
@@ -114,6 +133,6 @@ const TrackRow = (props: any) => {
       )}
     </View>
   );
-};
+}
 
 export default TrackRow;

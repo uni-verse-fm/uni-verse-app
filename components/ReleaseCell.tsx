@@ -1,3 +1,5 @@
+import React from "react";
+
 import { FontAwesome } from "@expo/vector-icons";
 import { useContext } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
@@ -7,16 +9,24 @@ import { Types } from "../constants/types";
 import { PlayerContext } from "../context/PlayerContext";
 import tw from "../tailwind";
 
-const ReleaseCell = (props: any) => {
+function ReleaseCell(props: {
+  release: {
+    _id: string;
+    author: { username: string };
+    title: string;
+    tracks: [];
+  };
+  navigation: { navigate: (string, unknown) => void };
+}) {
   const { dispatch } = useContext(PlayerContext);
 
   const getRelease = useQuery(
     "release",
     () => getReleaseById(props.release._id).then((res) => res.data),
-    { enabled: Boolean(props.release._id) }
+    { enabled: Boolean(props.release._id) },
   );
 
-  const onClickRelease = (release: any) => () => {
+  const onClickRelease = (release: { tracks: [] }) => () => {
     dispatch({
       type: Types.ReleasePlay,
       payload: {
@@ -41,9 +51,9 @@ const ReleaseCell = (props: any) => {
         <Text style={tw`text-base font-bold dark:text-white`}>
           {props.release?.title}
         </Text>
-        <Text
-          style={tw`font-bold text-grn`}
-        >{`artist: ${props.release.author.username}`}</Text>
+        <Text style={tw`font-bold text-grn`}>
+          {`artist: ${props.release.author.username}`}
+        </Text>
       </View>
       <View style={tw`flex flex-row items-center `}>
         <FontAwesome
@@ -55,6 +65,6 @@ const ReleaseCell = (props: any) => {
       </View>
     </TouchableOpacity>
   );
-};
+}
 
 export default ReleaseCell;

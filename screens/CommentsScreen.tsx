@@ -32,7 +32,7 @@ enum LikeDislike {
   Dislike,
 }
 
-const CommentsScreen = (props: ICommentsScreen) => {
+function CommentsScreen(props: ICommentsScreen) {
   const [comment, setComment] = useState("");
   const [like, setLike] = useState(false);
   const [dislike, setDislike] = useState(false);
@@ -43,21 +43,21 @@ const CommentsScreen = (props: ICommentsScreen) => {
       await queryClient.cancelQueries(`comments-${props.contentId}`);
 
       const previousPlaylists = queryClient.getQueryData(
-        `comments-${props.contentId}`
+        `comments-${props.contentId}`,
       );
 
-      queryClient.setQueryData(`comments-${props.contentId}`, (old: any[]) => [
-        ...old,
-        newTodo,
-      ]);
+      queryClient.setQueryData(
+        `comments-${props.contentId}`,
+        (old: unknown[]) => [...old, newTodo],
+      );
 
       return { previousPlaylists };
     },
-    onError: (err, newComment, context) => {
+    onError: (err, newComment, context: { previousPlaylists }) => {
       context &&
         queryClient.setQueryData(
           `comments-${props.contentId}`,
-          context.previousPlaylists
+          context.previousPlaylists,
         );
       Alert.alert("Sorry can't publish comment, try later.");
     },
@@ -75,7 +75,7 @@ const CommentsScreen = (props: ICommentsScreen) => {
     getResourceComments({
       contentId: props.contentId,
       typeOfContent: ModelType.Track,
-    }).then((res) => res.data)
+    }).then((res) => res.data),
   );
 
   const toggleLikeDislike = (likeDislike: LikeDislike) => () => {
@@ -95,12 +95,12 @@ const CommentsScreen = (props: ICommentsScreen) => {
 
   const handleSubmmit = () => {
     mutate({
-        contentId: props.contentId,
-        content: comment,
-        isPositive: like,
-        typeOfContent: ModelType.Track,
-    })
-  }
+      contentId: props.contentId,
+      content: comment,
+      isPositive: like,
+      typeOfContent: ModelType.Track,
+    });
+  };
 
   return (
     <Modal
@@ -120,7 +120,7 @@ const CommentsScreen = (props: ICommentsScreen) => {
             name="chevron-down"
             style={tw`text-grn m-2 rounded-full`}
             size={30}
-            multiline={true}
+            multiline
           />
         </TouchableOpacity>
         <View style={tw`flex-1 flex-col-reverse p-1 bg-white dark:bg-drk`}>
@@ -137,9 +137,9 @@ const CommentsScreen = (props: ICommentsScreen) => {
                 value={comment}
                 onChangeText={(value) => setComment(value)}
               />
-              <Text
-                style={tw`ml-4 text-xs text-grn`}
-              >{`${comment.length}/255`}</Text>
+              <Text style={tw`ml-4 text-xs text-grn`}>
+                {`${comment.length}/255`}
+              </Text>
             </View>
 
             <View style={tw`flex flex-row items-center`}>
@@ -169,7 +169,8 @@ const CommentsScreen = (props: ICommentsScreen) => {
               </View>
             </View>
           </View>
-          {commentsQuery.status === "success" && (commentsQuery.data as any[]).length > 0 ? (
+          {commentsQuery.status === "success" &&
+          (commentsQuery.data as unknown[]).length > 0 ? (
             <FlatList
               data={commentsQuery.data}
               renderItem={({ item }) => <CommentRow comment={item} />}
@@ -183,5 +184,5 @@ const CommentsScreen = (props: ICommentsScreen) => {
       </KeyboardAvoidingView>
     </Modal>
   );
-};
+}
 export default CommentsScreen;

@@ -1,12 +1,11 @@
 import React, { createContext, useContext } from "react";
-import axios, { AxiosError } from "axios";
-import { AuthContext } from "./AuthContext";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 import * as SecureStore from "expo-secure-store";
+import { AuthContext } from "./AuthContext";
 
-const resourcesUrl = "https://minio.vagahbond.com/minio"
-export const trackSource = resourcesUrl + "/tracks/";
-export const imageSource = resourcesUrl + "/images/";
+const resourcesUrl = "https://minio.vagahbond.com/minio";
+export const trackSource = `${resourcesUrl}/tracks/`;
+export const imageSource = `${resourcesUrl}/images/`;
 export const baseURL = "https://uni-verse.api.vagahbond.com";
 
 export const authAxios = axios.create({
@@ -20,7 +19,7 @@ export const publicAxios = axios.create({
 const AxiosContext = createContext({ authAxios, publicAxios });
 const { Provider } = AxiosContext;
 
-const AxiosProvider = (props: any) => {
+function AxiosProvider(props: unknown) {
   const authContext = useContext(AuthContext);
 
   authAxios.interceptors.request.use(
@@ -33,12 +32,10 @@ const AxiosProvider = (props: any) => {
       }
       return config;
     },
-    (error) => {
-      return Promise.reject(error);
-    }
+    (error) => Promise.reject(error),
   );
 
-  const refreshAuthLogic = async (failedRequest: any) => {
+  const refreshAuthLogic = async (failedRequest: unknown) => {
     const refreshToken = (await SecureStore.getItemAsync("refreshToken")) || "";
 
     return await axios
@@ -46,8 +43,7 @@ const AxiosProvider = (props: any) => {
         headers: { Authorization: `${refreshToken}` },
       })
       .then(async (tokenRefreshResponse) => {
-        failedRequest.response.config.headers.Authorization =
-          "Bearer " + tokenRefreshResponse.data.accessToken;
+        failedRequest.response.config.headers.Authorization = `Bearer ${tokenRefreshResponse.data.accessToken}`;
 
         authContext.setAuthState({
           refreshToken,
@@ -57,12 +53,12 @@ const AxiosProvider = (props: any) => {
 
         await SecureStore.setItemAsync(
           "accessToken",
-          tokenRefreshResponse.data.accessToken
+          tokenRefreshResponse.data.accessToken,
         );
-        
+
         return Promise.resolve();
       })
-      .catch((e: AxiosError) => {
+      .catch(() => {
         authContext.setAuthState({
           accessToken: undefined,
           refreshToken: undefined,
@@ -83,6 +79,6 @@ const AxiosProvider = (props: any) => {
       {props.children}
     </Provider>
   );
-};
+}
 
 export { AxiosContext, AxiosProvider };

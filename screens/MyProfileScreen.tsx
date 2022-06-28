@@ -10,6 +10,7 @@ import { getUserPlaylists } from "../api/PlaylistAPI";
 import ConfirmAlert from "../components/ConfirmDialog";
 import { deleteUser } from "../api/UserAPI";
 import { AuthContext } from "../context/AuthContext";
+import { imageSource } from "../context/AxiosContext";
 
 export default function MyProfileScreen({
   navigation,
@@ -64,7 +65,14 @@ export default function MyProfileScreen({
       <View style={tw`flex flex-row m-2`}>
         <Image
           style={tw`h-40 w-40 rounded-full m-2`}
-          source={require("../assets/images/profile.jpg")}
+          source={
+            meQuery.status === "success" && meQuery.data.profilePicture
+              ? {
+                  uri: imageSource + meQuery.data.profilePicture,
+                }
+              : require("../assets/images/profile.jpg")
+          }
+          defaultSource={require("../assets/images/profile.jpg")}
         />
         <View style={tw`flex my-5 p-2 w-1/2`}>
           <Text style={tw`text-lg font-bold text-black dark:text-white`}>

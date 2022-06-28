@@ -1,9 +1,9 @@
 import React from "react";
-import { Stack, screens } from ".";
 import MyProfileScreen from "../screens/MyProfileScreen";
 import { RootStackParamList } from "../types";
 import BottomAuthenticatedTabNavigator from "./BottomAuthenticatedTabNavigator";
 import tw from "../tailwind";
+import { screens, Stack } from "./shared";
 
 const AuthenticatedNavigator = () => {
   return (

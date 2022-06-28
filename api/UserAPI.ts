@@ -17,7 +17,10 @@ const deleteUser = () => authAxios.delete(`${userEndpoint}`);
 
 const onboardUser = () => publicAxios.post(`${userEndpoint}/onboard`);
 
-const searchUsers = (text: string, { signal }: { signal: unknown }) =>
+const searchUsers = (
+  text: string,
+  { signal }: { signal: AbortSignal | undefined },
+) =>
   authAxios
     .get(`${userEndpoint}/search?search=${text}`, {
       signal,

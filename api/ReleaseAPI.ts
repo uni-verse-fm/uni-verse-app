@@ -20,7 +20,10 @@ const deleteRelease = (id: string) =>
 const getUserReleases = (id: string) =>
   publicAxios.get(`${releaseEndpoint}/user/${id}`).then((res) => res.data);
 
-const searchRelease = (text: string, { signal }: { signal: unknown }) =>
+const searchRelease = (
+  text: string,
+  { signal }: { signal: AbortSignal | undefined },
+) =>
   publicAxios
     .get(`${releaseEndpoint}/search?search=${text}`, {
       signal,

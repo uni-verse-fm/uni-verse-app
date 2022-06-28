@@ -19,9 +19,9 @@ function AuthProvider(props: { children: React.ReactNode }) {
   const [authState, setAuthState] = useState<AuthStateType>();
   const isCancelled = useRef(false);
 
-  const logout = async () => {
-    await SecureStore.deleteItemAsync("refreshToken");
-    await SecureStore.deleteItemAsync("accessToken");
+  const logout = () => {
+    SecureStore.deleteItemAsync("refreshToken");
+    SecureStore.deleteItemAsync("accessToken");
 
     setAuthState({
       accessToken: undefined,

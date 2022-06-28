@@ -1,5 +1,4 @@
 import React from "react";
-import { BottomTab } from ".";
 import HomeScreen from "../screens/HomeScreen";
 import tw from "../tailwind";
 import { RootTabScreenProps } from "../types";
@@ -7,6 +6,7 @@ import TabBarIcon from "./TabBarIcon";
 import { Pressable, Image } from "react-native";
 import LibraryScreen from "../screens/LibraryScreen";
 import SearchScreen from "../screens/SearchScreen";
+import { BottomTab } from "./shared";
 
 export default function BottomAuthenticatedTabNavigator() {
   return (

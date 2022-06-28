@@ -14,10 +14,6 @@ import Spinner from "./components/Spinner";
 import { PlayerProvider } from "./context/PlayerContext";
 import PlayerScreen from "./screens/PlayerScreen";
 
-interface IError {
-  message: string;
-}
-
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 2 } },
 });
@@ -47,12 +43,11 @@ export default function App() {
       authContext.setAuthState({
         accessToken: accessToken || undefined,
         refreshToken: refreshToken || undefined,
-        authenticated: accessToken !== undefined,
+        authenticated: !!accessToken,
       });
       setStatus("success");
     } catch (error) {
       setStatus("error");
-      console.log(`Keychain Error: ${(error as IError).message}`);
       authContext.setAuthState({
         accessToken: undefined,
         refreshToken: undefined,

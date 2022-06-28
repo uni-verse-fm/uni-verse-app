@@ -2,7 +2,7 @@ import { View, Text, Image, FlatList } from "react-native";
 import React from "react";
 import { useQuery } from "react-query";
 import tw from "../tailwind";
-import { RootTabScreenProps } from "../types";
+import { RootStackScreenProps } from "../types";
 import ReleaseCell from "../components/ReleaseCell";
 import { getUserReleases } from "../api/ReleaseAPI";
 
@@ -17,7 +17,7 @@ interface IParams {
 export default function UserScreen({
   route,
   navigation,
-}: RootTabScreenProps<"Home">) {
+}: RootStackScreenProps<"User">) {
   const { user } = route.params as unknown as IParams;
 
   const releaseQuery = useQuery(

@@ -31,7 +31,7 @@ function TrackCell(props: { playlistId: string; track: Track; me: unknown }) {
   };
 
   const trackMutation = useMutation(
-    `delete-track-${props.track._id}-playlist`,
+    `delete-track-${props.track.id}-playlist`,
     updatePlaylist,
     {
       onError: () => {
@@ -53,7 +53,7 @@ function TrackCell(props: { playlistId: string; track: Track; me: unknown }) {
     trackMutation.mutate({
       id: props.playlistId,
       data: {
-        trackId: props.track._id,
+        trackId: props.track.id,
         action: PlaylistUpdateTaskAction.Remove,
       },
     });
@@ -99,7 +99,7 @@ function TrackCell(props: { playlistId: string; track: Track; me: unknown }) {
         <CommentsScreen
           visible={showComments}
           onCloseComments={onCloseComments}
-          contentId={props.track._id}
+          contentId={props.track.id}
         />
       )}
       {authContext.authState?.authenticated && props.me && props.playlistId && (

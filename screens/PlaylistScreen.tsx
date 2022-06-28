@@ -111,12 +111,7 @@ export default function PlaylistScreen({
           <FlatList
             data={data.tracks}
             renderItem={({ item }) => (
-              <TrackCell
-                track={item}
-                navigation={navigation}
-                me={me}
-                playlistId={playlist._id}
-              />
+              <TrackCell track={item} me={me} playlistId={playlist._id} />
             )}
           />
         ) : (

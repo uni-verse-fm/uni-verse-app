@@ -18,14 +18,14 @@ function AddPlaylistForm({ cancel }) {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation("createPlaylist", createPlaylist, {
-    onMutate: async (newTodo) => {
+    onMutate: async (newComment) => {
       await queryClient.cancelQueries("myPlaylists");
 
       const previousPlaylists = queryClient.getQueryData("myPlaylists");
 
       queryClient.setQueryData("myPlaylists", (old: unknown[]) => [
         ...old,
-        newTodo,
+        newComment,
       ]);
 
       return { previousPlaylists };

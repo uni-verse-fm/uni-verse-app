@@ -39,7 +39,7 @@ function CommentsScreen(props: ICommentsScreen) {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation("createComment", createComment, {
-    onMutate: async (newTodo) => {
+    onMutate: async (newComment) => {
       await queryClient.cancelQueries(`comments-${props.contentId}`);
 
       const previousPlaylists = queryClient.getQueryData(
@@ -48,7 +48,7 @@ function CommentsScreen(props: ICommentsScreen) {
 
       queryClient.setQueryData(
         `comments-${props.contentId}`,
-        (old: unknown[]) => [...old, newTodo],
+        (old: unknown[]) => [...old, newComment],
       );
 
       return { previousPlaylists };

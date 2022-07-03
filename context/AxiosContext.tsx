@@ -2,11 +2,12 @@ import React, { createContext, useContext } from "react";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 import * as SecureStore from "expo-secure-store";
 import { AuthContext } from "./AuthContext";
+import axios from "axios";
 
-const resourcesUrl = "https://minio.vagahbond.com/minio";
+const resourcesUrl = "http://192.168.1.26:9000/minio";
 export const trackSource = `${resourcesUrl}/tracks/`;
 export const imageSource = `${resourcesUrl}/images/`;
-export const baseURL = "https://uni-verse.api.vagahbond.com";
+export const baseURL = "http://192.168.1.26:3000";
 
 export const authAxios = axios.create({
   baseURL,

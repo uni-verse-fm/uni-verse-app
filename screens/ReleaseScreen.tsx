@@ -22,7 +22,6 @@ interface IParams {
 
 export default function ReleaseScreen({
   route,
-  navigation,
 }: RootStackScreenProps<"Release">) {
   const { release } = route.params as unknown as IParams;
   return (
@@ -79,7 +78,7 @@ export default function ReleaseScreen({
           <FlatList
             data={release.tracks}
             renderItem={({ item }) => (
-              <TrackCell track={item} navigation={navigation} />
+              <TrackCell track={item} playlistId={""} me={undefined} />
             )}
           />
         ) : (

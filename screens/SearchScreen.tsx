@@ -40,11 +40,13 @@ export default function SearchScreen({
     setTab(clickedTab);
   };
 
+  const enabled = (tabParam: Tab) => tabParam === tab && query.length > 0;
+
   const taskQuery = useQuery(
     ["searchTrack", query],
     ({ signal }) => searchTrack(query, { signal }),
     {
-      enabled: Boolean(query),
+      enabled: enabled(Tab.Tracks),
     },
   );
 
@@ -52,7 +54,7 @@ export default function SearchScreen({
     ["searchReleases", query],
     ({ signal }) => searchRelease(query, { signal }),
     {
-      enabled: Boolean(query),
+      enabled: enabled(Tab.Releases),
     },
   );
 
@@ -60,7 +62,7 @@ export default function SearchScreen({
     ["searchPlaylists", query],
     ({ signal }) => searchPlaylist(query, { signal }),
     {
-      enabled: Boolean(query),
+      enabled: enabled(Tab.Playlists),
     },
   );
 
@@ -68,7 +70,7 @@ export default function SearchScreen({
     ["searchUsers", query],
     ({ signal }) => searchUsers(query, { signal }),
     {
-      enabled: Boolean(query),
+      enabled: enabled(Tab.Users),
     },
   );
 
@@ -164,9 +166,7 @@ export default function SearchScreen({
         ) : tab === Tab.Tracks && taskQuery.status === "success" ? (
           <FlatList
             data={taskQuery.data}
-            renderItem={({ item }) => (
-              <TrackRow track={item} navigation={navigation} />
-            )}
+            renderItem={({ item }) => <TrackRow track={item} />}
           />
         ) : tab === Tab.Releases && releaseQuery.status === "success" ? (
           <FlatList

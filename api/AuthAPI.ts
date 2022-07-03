@@ -15,8 +15,7 @@ const register = (data: IRegister) =>
 const googleAuth = (data: IGoogleAuth) =>
   axiosClient.post(`${authEndpoint}/google`, data);
 const login = (data: ILogin) => axiosClient.post(`${authEndpoint}/login`, data);
-const logout = () => authAxios.post(`${authEndpoint}/logout`);
 const me = () => authAxios.get(`${authEndpoint}/me`);
 const refreshToken = () => axios.get(`${authEndpoint}/refresh`);
 
-export { register, login, logout, me, googleAuth, refreshToken };
+export { register, login, me, googleAuth, refreshToken };

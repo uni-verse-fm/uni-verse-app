@@ -1,10 +1,10 @@
 import React from "react";
-import { Stack, screens } from ".";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import tw from "../tailwind";
 import { RootStackParamList } from "../types";
 import BottomGuestTabNavigator from "./BottomGuestNavigator";
+import { screens, Stack } from "./shared";
 
 function GuestNavigator() {
   return (

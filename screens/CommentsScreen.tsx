@@ -39,7 +39,7 @@ function CommentsScreen(props: ICommentsScreen) {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation("createComment", createComment, {
-    onMutate: async (newTodo) => {
+    onMutate: async (newComment) => {
       await queryClient.cancelQueries(`comments-${props.contentId}`);
 
       const previousPlaylists = queryClient.getQueryData(
@@ -48,7 +48,7 @@ function CommentsScreen(props: ICommentsScreen) {
 
       queryClient.setQueryData(
         `comments-${props.contentId}`,
-        (old: unknown[]) => [...old, newTodo],
+        (old: unknown[]) => [...old, newComment],
       );
 
       return { previousPlaylists };
@@ -64,18 +64,16 @@ function CommentsScreen(props: ICommentsScreen) {
     onSettled: () => {
       queryClient.invalidateQueries(`comments-${props.contentId}`);
     },
-    onSuccess: (res) => {
-      if (res.status !== 201) {
-        Alert.alert("Sorry can't publish comment, try later.");
-      }
-    },
   });
 
-  const commentsQuery = useQuery(`comments-${props.contentId}`, () =>
-    getResourceComments({
-      contentId: props.contentId,
-      typeOfContent: ModelType.Track,
-    }).then((res) => res.data),
+  const commentsQuery = useQuery(
+    `comments-${props.contentId}`,
+    () =>
+      getResourceComments({
+        contentId: props.contentId,
+        typeOfContent: ModelType.Track,
+      }).then((res) => res.data),
+    { enabled: props.visible },
   );
 
   const toggleLikeDislike = (likeDislike: LikeDislike) => () => {

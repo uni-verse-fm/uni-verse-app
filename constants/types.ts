@@ -128,7 +128,14 @@ export type IReaderTimeLine = {
   onSlide: (value: number) => unknown;
 };
 
-export type Track = { fileName: string; author: unknown; id?: string } & ITrack;
+export type User = {
+  id: string;
+  username: string;
+  email: string;
+  profilePicture: string;
+};
+
+export type Track = { fileName: string; author: User; id: string } & ITrack;
 
 export const enum SourceType {
   Playlist,

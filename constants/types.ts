@@ -196,6 +196,7 @@ export enum Endoints {
   Comments = "/comments",
   Payments = "/payments",
   Tracks = "/tracks",
+  FpSearch = "/fp-searches",
 }
 
 export type ActionMap<M extends { [index: string]: unknown }> = {

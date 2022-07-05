@@ -23,7 +23,9 @@ const { Provider } = AxiosContext;
 function AxiosProvider({ children }) {
   const authContext = useContext(AuthContext);
 
-  const refreshAuthLogic = async (failedRequest: any) => {
+  const refreshAuthLogic = async (failedRequest: {
+    response: { config: { headers: { Authorization: string } } };
+  }) => {
     const refreshToken = (await SecureStore.getItemAsync("refreshToken")) || "";
     return await axios
       .get(`${baseURL}/auth/refresh`, {

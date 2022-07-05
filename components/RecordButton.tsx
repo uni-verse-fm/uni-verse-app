@@ -164,7 +164,7 @@ const RecordButton = () => {
               ToastAndroid.SHORT,
             );
 
-            setTimeout(stopRecording, 8000);
+            setTimeout(stopRecording, 10000);
           } else {
             Alert.alert(
               " Cannot fingerprint",

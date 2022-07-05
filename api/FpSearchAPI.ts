@@ -1,4 +1,4 @@
-import { readFile, uploadFiles } from "react-native-fs";
+import { uploadFiles } from "react-native-fs";
 import { Endoints } from "../constants/types";
 import { publicAxios } from "../context/AxiosContext";
 

@@ -16,7 +16,7 @@ import AudioRecorderPlayer, {
 } from "react-native-audio-recorder-player";
 import tw from "../tailwind";
 import FileSystem, { UploadResult } from "react-native-fs";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { createFpSearch, getFpSearch } from "../api/FpSearchAPI";
 import { AxiosError } from "axios";
 import { PlayerContext } from "../context/PlayerContext";
@@ -29,8 +29,6 @@ enum Status {
 }
 const RecordButton = () => {
   const [status, setStatus] = useState<Status>(Status.IDLE);
-  const [recordSecs, setRecordSecs] = useState(0);
-  const [recordTime, setRecordTime] = useState("00:00:00");
 
   const nbMaxTries = 5;
 
@@ -56,7 +54,7 @@ const RecordButton = () => {
               },
             });
           } else {
-            setTimeout(() => fetchAnswer(id, nbtries + 1), 2000);
+            setTimeout(() => fetchAnswer(id, nbtries + 1), 3000);
           }
         })
         .catch((err) => {
@@ -78,7 +76,6 @@ const RecordButton = () => {
     },
     onSuccess: (query: { jobId: number; promise: Promise<UploadResult> }) => {
       query.promise.then((res) => {
-
         fetchAnswer(JSON.parse(res.body).id);
       });
       Alert.alert("extract posted, awaiting results...");
@@ -97,7 +94,6 @@ const RecordButton = () => {
       .then((result) => {
         if (result) {
           audioRecorderPlayer.removeRecordBackListener();
-          setRecordSecs(0);
           fpSearch();
         } else {
           Alert.alert(
@@ -128,14 +124,7 @@ const RecordButton = () => {
     console.log("audioSet", audioSet);
 
     audioRecorderPlayer.startRecorder(path, audioSet).then((uri) => {
-      if (uri) {
-        audioRecorderPlayer.addRecordBackListener((e) => {
-          setRecordSecs(e.currentPosition);
-          setRecordTime(
-            audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)),
-          );
-        });
-      } else {
+      if (!uri) {
         Alert.alert(" Cannot record", "An error occured and recording failed.");
         console.warn("Could not start recording");
       }
@@ -211,7 +200,7 @@ const RecordButton = () => {
 
   return (
     <View
-      onTouchStart={(e) => startRecording()}
+      onTouchStart={() => startRecording()}
       style={tw`absolute ${
         netInfo.isConnected ? "bottom-34" : "bottom-38"
       } right-0  mr-1 rounded-full bg-grn w-11.5 h-11.5 border-0 `}

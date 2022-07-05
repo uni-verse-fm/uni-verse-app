@@ -7,7 +7,7 @@ import axios from "axios";
 const resourcesUrl = "https://minio.vagahbond.com";
 export const trackSource = `${resourcesUrl}/tracks/`;
 export const imageSource = `${resourcesUrl}/images/`;
-export const baseURL = "http://192.168.1.26:3000";
+export const baseURL = "https://uni-verse.api.vagahbond.com";
 
 export const authAxios = axios.create({
   baseURL,

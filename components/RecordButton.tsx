@@ -88,7 +88,6 @@ const RecordButton = () => {
 
   const stopRecording = async () => {
     setStatus(Status.SEARCHING);
-    console.log("stopping the recording ");
     audioRecorderPlayer
       .stopRecorder()
       .then((result) => {
@@ -120,8 +119,6 @@ const RecordButton = () => {
       AVNumberOfChannelsKeyIOS: 2,
       AVFormatIDKeyIOS: AVEncodingOption.aac,
     };
-
-    console.log("audioSet", audioSet);
 
     audioRecorderPlayer.startRecorder(path, audioSet).then((uri) => {
       if (!uri) {

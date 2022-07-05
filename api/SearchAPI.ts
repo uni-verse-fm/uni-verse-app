@@ -1,5 +1,5 @@
 const SearchAPI = () => {
-  console.log("not implemented");
+  console.warn("not implemented");
 };
 
 export default SearchAPI;

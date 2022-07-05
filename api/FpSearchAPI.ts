@@ -42,7 +42,6 @@ const createFpSearch = (filename: string) => {
 };
 
 const getFpSearch = (id: string) => {
-  console.log(`${endpoint}/${id}`);
   return publicAxios.get(`${endpoint}/${id}`);
 };
 

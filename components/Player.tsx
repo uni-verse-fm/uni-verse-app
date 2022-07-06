@@ -19,7 +19,7 @@ function Player() {
       />
       <View style={tw`grow flex`}>
         <Text style={tw`text-sm`} ellipsizeMode="tail" numberOfLines={1}>
-          {`${state.trackInfo?.title} - ${state.trackInfo?.author} .feat`}
+          {`${state.trackInfo?.title} - ${state.trackInfo?.author}`}
         </Text>
         <View style={tw`flex flex-row items-center h-6`}>
           <View style={tw`grow mx-1`}>

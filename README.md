@@ -1,3 +1,7 @@
+![GitHub Release](https://img.shields.io/github/v/release/uni-verse-fm/uni-verse-app?sort=semver&display_name=release&style=for-the-badge&label=APP%3ARELEASE&cacheSeconds=3600)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/uni-verse-fm/uni-verse-app/ci.yml?style=for-the-badge&label=App%3AChecks&logo=eslint)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/uni-verse-fm/uni-verse-app/build.yml?style=for-the-badge&label=App%3ABuild&logo=react)
+
 This project was bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
 
 Below you'll find information about performing common tasks. The most recent version of this guide is available [here](https://github.com/react-community/create-react-native-app/blob/master/react-native-scripts/template/README.md).

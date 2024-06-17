@@ -20,25 +20,25 @@ const createFpSearch = (filename: string) => {
     method: "POST",
   });
 
-  formData.append("file", {
-    uri: filename,
-    type: "audio/aac",
-    name: "extract.m4a",
-  });
-
-  return publicAxios
-    .post(
-      `${endpoint}`,
-      {
-        formData,
-      },
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
+  /*  formData.append("file", {
+      uri: filename,
+      type: "audio/aac",
+      name: "extract.m4a",
+    });
+  
+    return publicAxios
+      .post(
+        `${endpoint}`,
+        {
+          formData,
         },
-      },
-    )
-    .then((res) => res);
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      )
+      .then((res) => res);*/
 };
 
 const getFpSearch = (id: string) => {

@@ -1,10 +1,11 @@
-import { uploadFiles } from "react-native-fs";
+// import { uploadFiles } from "react-native-fs";
 import { Endoints } from "../constants/types";
 import { publicAxios } from "../context/AxiosContext";
 
 const endpoint = Endoints.FpSearch;
 
-const createFpSearch = (filename: string) => {
+/*
+ * const createFpSearch = (filename: string) => {
   const formData = new FormData();
 
   return uploadFiles({
@@ -39,10 +40,10 @@ const createFpSearch = (filename: string) => {
         },
       )
       .then((res) => res);*/
-};
-
+// };
+//
 const getFpSearch = (id: string) => {
   return publicAxios.get(`${endpoint}/${id}`);
 };
 
-export { createFpSearch, getFpSearch };
+export { getFpSearch };

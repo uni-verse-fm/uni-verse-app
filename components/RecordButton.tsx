@@ -17,7 +17,7 @@ import AudioRecorderPlayer, {
 import tw from "../tailwind";
 import FileSystem, { UploadResult } from "react-native-fs";
 import { useMutation } from "react-query";
-import { createFpSearch, getFpSearch } from "../api/FpSearchAPI";
+import { getFpSearch } from "../api/FpSearchAPI";
 import { AxiosError } from "axios";
 import { PlayerContext } from "../context/PlayerContext";
 import { Types } from "../constants/types";
@@ -68,7 +68,7 @@ const RecordButton = () => {
     }
   }
 
-  const { mutate } = useMutation(`fp-search-query`, createFpSearch, {
+  /*const { mutate } = useMutation(`fp-search-query`, createFpSearch, {
     onError: (err: AxiosError) => {
       console.warn(JSON.stringify(err));
       console.warn(err.message);
@@ -80,11 +80,11 @@ const RecordButton = () => {
       });
       Alert.alert("extract posted, awaiting results...");
     },
-  });
+  });*/
 
-  function fpSearch() {
+  /*function fpSearch() {
     mutate(path);
-  }
+  }*/
 
   const stopRecording = async () => {
     setStatus(Status.SEARCHING);
@@ -93,7 +93,7 @@ const RecordButton = () => {
       .then((result) => {
         if (result) {
           audioRecorderPlayer.removeRecordBackListener();
-          fpSearch();
+          //      fpSearch();
         } else {
           Alert.alert(
             " Cannot stop recording",
@@ -149,11 +149,11 @@ const RecordButton = () => {
         ).then((permissions) => {
           if (
             permissions["android.permission.WRITE_EXTERNAL_STORAGE"] ===
-              PermissionsAndroid.RESULTS.GRANTED &&
+            PermissionsAndroid.RESULTS.GRANTED &&
             permissions["android.permission.READ_EXTERNAL_STORAGE"] ===
-              PermissionsAndroid.RESULTS.GRANTED &&
+            PermissionsAndroid.RESULTS.GRANTED &&
             permissions["android.permission.RECORD_AUDIO"] ===
-              PermissionsAndroid.RESULTS.GRANTED
+            PermissionsAndroid.RESULTS.GRANTED
           ) {
             initializeRecorder();
             ToastAndroid.show(
@@ -198,9 +198,8 @@ const RecordButton = () => {
   return (
     <View
       onTouchStart={() => startRecording()}
-      style={tw`absolute ${
-        netInfo.isConnected ? "bottom-34" : "bottom-38"
-      } right-0  mr-1 rounded-full bg-grn w-11.5 h-11.5 border-0 `}
+      style={tw`absolute ${netInfo.isConnected ? "bottom-34" : "bottom-38"
+        } right-0  mr-1 rounded-full bg-grn w-11.5 h-11.5 border-0 `}
     >
       {icon()}
     </View>

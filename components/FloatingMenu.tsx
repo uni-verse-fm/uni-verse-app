@@ -4,19 +4,18 @@ import { TouchableOpacity, View } from "react-native";
 import tw from "../tailwind";
 import OfflineHeader from "./OfflineHeader";
 import Player from "./Player";
-import RecordButton from "./RecordButton";
+//import RecordButton from "./RecordButton";
 
 export default function FloatingMenu({ onPlayerClicked }) {
   const netInfo = useNetInfo();
+  //       <!-- <RecordButton /> -->
 
   return (
     <>
-      <RecordButton />
       <TouchableOpacity
         onPress={onPlayerClicked}
-        style={tw`absolute w-full ${
-          netInfo.isConnected ? "bottom-20" : "bottom-24"
-        } right-0 p-1`}
+        style={tw`absolute w-full ${netInfo.isConnected ? "bottom-20" : "bottom-24"
+          } right-0 p-1`}
       >
         <Player />
       </TouchableOpacity>
